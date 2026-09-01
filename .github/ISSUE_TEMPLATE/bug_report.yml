@@ -1,0 +1,60 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+name: Package bug
+description: Report a bug in the SCHLEPP Python package or scripts.
+title: "[Bug] "
+body:
+  - type: checkboxes
+    id: existing
+    attributes:
+      label: Existing issues
+      description: Please search open and closed issues before filing a new one.
+      options:
+        - label: I have searched the existing issues.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened, and what did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest code snippet or command sequence that reproduces the issue.
+      placeholder: |
+        1. Install with ...
+        2. Run ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the package version or commit, Python version, OS, and relevant dependency versions.
+      value: |
+        - SCHLEPP version or commit:
+        - Python:
+        - OS:
+        - PyTorch:
+        - NumPy:
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output or logs
+      description: Paste the relevant traceback or command output.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add links, screenshots, sample metadata, or other details that help explain the issue.
+    validations:
+      required: false

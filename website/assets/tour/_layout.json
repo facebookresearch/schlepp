@@ -1,0 +1,291 @@
+{
+  "sequence_id": "1286-EVENTS_ROOM__obj3__cam03__v03",
+  "scene_id": null,
+  "scene_type": "EVENTS_ROOM",
+  "num_frames": 140,
+  "fps": 30.0,
+  "cameras": [
+    "static",
+    "body_follow",
+    "object_orbit",
+    "aria_rgb",
+    "aria_slamL",
+    "aria_slamR"
+  ],
+  "modalities": [
+    "rgb",
+    "depth",
+    "flow_fwd",
+    "flow_bwd",
+    "segmentation",
+    "point_tracks",
+    "obbs"
+  ],
+  "files": {
+    "static": {
+      "rgb": {
+        "mp4": "static_rgb.mp4",
+        "webm": "static_rgb.webm",
+        "mp4_bytes": 391341,
+        "webm_bytes": 313500
+      },
+      "depth": {
+        "mp4": "static_depth.mp4",
+        "webm": "static_depth.webm",
+        "mp4_bytes": 307832,
+        "webm_bytes": 267150
+      },
+      "flow_fwd": {
+        "mp4": "static_flow_fwd.mp4",
+        "webm": "static_flow_fwd.webm",
+        "mp4_bytes": 234231,
+        "webm_bytes": 227638
+      },
+      "flow_bwd": {
+        "mp4": "static_flow_bwd.mp4",
+        "webm": "static_flow_bwd.webm",
+        "mp4_bytes": 228937,
+        "webm_bytes": 207808
+      },
+      "segmentation": {
+        "mp4": "static_segmentation.mp4",
+        "webm": "static_segmentation.webm",
+        "mp4_bytes": 235480,
+        "webm_bytes": 187355
+      },
+      "point_tracks": {
+        "mp4": "static_point_tracks.mp4",
+        "webm": "static_point_tracks.webm",
+        "mp4_bytes": 1148116,
+        "webm_bytes": 1101488
+      },
+      "obbs": {
+        "mp4": "static_obbs.mp4",
+        "webm": "static_obbs.webm",
+        "mp4_bytes": 811323,
+        "webm_bytes": 881162
+      }
+    },
+    "body_follow": {
+      "rgb": {
+        "mp4": "body_follow_rgb.mp4",
+        "webm": "body_follow_rgb.webm",
+        "mp4_bytes": 1067584,
+        "webm_bytes": 796105
+      },
+      "depth": {
+        "mp4": "body_follow_depth.mp4",
+        "webm": "body_follow_depth.webm",
+        "mp4_bytes": 1072327,
+        "webm_bytes": 770215
+      },
+      "flow_fwd": {
+        "mp4": "body_follow_flow_fwd.mp4",
+        "webm": "body_follow_flow_fwd.webm",
+        "mp4_bytes": 1279396,
+        "webm_bytes": 669804
+      },
+      "flow_bwd": {
+        "mp4": "body_follow_flow_bwd.mp4",
+        "webm": "body_follow_flow_bwd.webm",
+        "mp4_bytes": 1338502,
+        "webm_bytes": 698950
+      },
+      "segmentation": {
+        "mp4": "body_follow_segmentation.mp4",
+        "webm": "body_follow_segmentation.webm",
+        "mp4_bytes": 608203,
+        "webm_bytes": 396244
+      },
+      "point_tracks": {
+        "mp4": "body_follow_point_tracks.mp4",
+        "webm": "body_follow_point_tracks.webm",
+        "mp4_bytes": 7400143,
+        "webm_bytes": 9324996
+      },
+      "obbs": {
+        "mp4": "body_follow_obbs.mp4",
+        "webm": "body_follow_obbs.webm",
+        "mp4_bytes": 2859613,
+        "webm_bytes": 3010537
+      }
+    },
+    "object_orbit": {
+      "rgb": {
+        "mp4": "object_orbit_rgb.mp4",
+        "webm": "object_orbit_rgb.webm",
+        "mp4_bytes": 1142474,
+        "webm_bytes": 847324
+      },
+      "depth": {
+        "mp4": "object_orbit_depth.mp4",
+        "webm": "object_orbit_depth.webm",
+        "mp4_bytes": 1175483,
+        "webm_bytes": 944068
+      },
+      "flow_fwd": {
+        "mp4": "object_orbit_flow_fwd.mp4",
+        "webm": "object_orbit_flow_fwd.webm",
+        "mp4_bytes": 1399673,
+        "webm_bytes": 751716
+      },
+      "flow_bwd": {
+        "mp4": "object_orbit_flow_bwd.mp4",
+        "webm": "object_orbit_flow_bwd.webm",
+        "mp4_bytes": 1437832,
+        "webm_bytes": 784580
+      },
+      "segmentation": {
+        "mp4": "object_orbit_segmentation.mp4",
+        "webm": "object_orbit_segmentation.webm",
+        "mp4_bytes": 807811,
+        "webm_bytes": 559118
+      },
+      "point_tracks": {
+        "mp4": "object_orbit_point_tracks.mp4",
+        "webm": "object_orbit_point_tracks.webm",
+        "mp4_bytes": 6824799,
+        "webm_bytes": 7730468
+      },
+      "obbs": {
+        "mp4": "object_orbit_obbs.mp4",
+        "webm": "object_orbit_obbs.webm",
+        "mp4_bytes": 2673345,
+        "webm_bytes": 2595650
+      }
+    },
+    "aria_rgb": {
+      "rgb": {
+        "mp4": "aria_rgb_rgb.mp4",
+        "webm": "aria_rgb_rgb.webm",
+        "mp4_bytes": 1885330,
+        "webm_bytes": 2045413
+      },
+      "depth": {
+        "mp4": "aria_rgb_depth.mp4",
+        "webm": "aria_rgb_depth.webm",
+        "mp4_bytes": 1642520,
+        "webm_bytes": 1593740
+      },
+      "flow_fwd": {
+        "mp4": "aria_rgb_flow_fwd.mp4",
+        "webm": "aria_rgb_flow_fwd.webm",
+        "mp4_bytes": 1763988,
+        "webm_bytes": 739595
+      },
+      "flow_bwd": {
+        "mp4": "aria_rgb_flow_bwd.mp4",
+        "webm": "aria_rgb_flow_bwd.webm",
+        "mp4_bytes": 1740716,
+        "webm_bytes": 711256
+      },
+      "segmentation": {
+        "mp4": "aria_rgb_segmentation.mp4",
+        "webm": "aria_rgb_segmentation.webm",
+        "mp4_bytes": 2275340,
+        "webm_bytes": 2420418
+      },
+      "point_tracks": {
+        "mp4": "aria_rgb_point_tracks.mp4",
+        "webm": "aria_rgb_point_tracks.webm",
+        "mp4_bytes": 7491986,
+        "webm_bytes": 8825681
+      },
+      "obbs": {
+        "mp4": "aria_rgb_obbs.mp4",
+        "webm": "aria_rgb_obbs.webm",
+        "mp4_bytes": 4935951,
+        "webm_bytes": 5792441
+      }
+    },
+    "aria_slamL": {
+      "rgb": {
+        "mp4": "aria_slamL_rgb.mp4",
+        "webm": "aria_slamL_rgb.webm",
+        "mp4_bytes": 434276,
+        "webm_bytes": 484630
+      },
+      "depth": {
+        "mp4": "aria_slamL_depth.mp4",
+        "webm": "aria_slamL_depth.webm",
+        "mp4_bytes": 563328,
+        "webm_bytes": 708574
+      },
+      "flow_fwd": {
+        "mp4": "aria_slamL_flow_fwd.mp4",
+        "webm": "aria_slamL_flow_fwd.webm",
+        "mp4_bytes": 517299,
+        "webm_bytes": 320267
+      },
+      "flow_bwd": {
+        "mp4": "aria_slamL_flow_bwd.mp4",
+        "webm": "aria_slamL_flow_bwd.webm",
+        "mp4_bytes": 514753,
+        "webm_bytes": 320718
+      },
+      "segmentation": {
+        "mp4": "aria_slamL_segmentation.mp4",
+        "webm": "aria_slamL_segmentation.webm",
+        "mp4_bytes": 1071880,
+        "webm_bytes": 1294707
+      },
+      "point_tracks": {
+        "mp4": "aria_slamL_point_tracks.mp4",
+        "webm": "aria_slamL_point_tracks.webm",
+        "mp4_bytes": 2005360,
+        "webm_bytes": 2422793
+      },
+      "obbs": {
+        "mp4": "aria_slamL_obbs.mp4",
+        "webm": "aria_slamL_obbs.webm",
+        "mp4_bytes": 1353047,
+        "webm_bytes": 1661460
+      }
+    },
+    "aria_slamR": {
+      "rgb": {
+        "mp4": "aria_slamR_rgb.mp4",
+        "webm": "aria_slamR_rgb.webm",
+        "mp4_bytes": 438609,
+        "webm_bytes": 472296
+      },
+      "depth": {
+        "mp4": "aria_slamR_depth.mp4",
+        "webm": "aria_slamR_depth.webm",
+        "mp4_bytes": 600273,
+        "webm_bytes": 803058
+      },
+      "flow_fwd": {
+        "mp4": "aria_slamR_flow_fwd.mp4",
+        "webm": "aria_slamR_flow_fwd.webm",
+        "mp4_bytes": 564166,
+        "webm_bytes": 368441
+      },
+      "flow_bwd": {
+        "mp4": "aria_slamR_flow_bwd.mp4",
+        "webm": "aria_slamR_flow_bwd.webm",
+        "mp4_bytes": 562810,
+        "webm_bytes": 353097
+      },
+      "segmentation": {
+        "mp4": "aria_slamR_segmentation.mp4",
+        "webm": "aria_slamR_segmentation.webm",
+        "mp4_bytes": 839900,
+        "webm_bytes": 914362
+      },
+      "point_tracks": {
+        "mp4": "aria_slamR_point_tracks.mp4",
+        "webm": "aria_slamR_point_tracks.webm",
+        "mp4_bytes": 2032439,
+        "webm_bytes": 2507921
+      },
+      "obbs": {
+        "mp4": "aria_slamR_obbs.mp4",
+        "webm": "aria_slamR_obbs.webm",
+        "mp4_bytes": 1367794,
+        "webm_bytes": 1627012
+      }
+    }
+  },
+  "total_bytes": 138499966
+}

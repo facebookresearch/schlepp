@@ -1,0 +1,42 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+name: Documentation or website issue
+description: Report missing, unclear, or incorrect documentation or website content.
+title: "[Docs] "
+body:
+  - type: checkboxes
+    id: existing
+    attributes:
+      label: Existing issues
+      description: Please search open and closed issues before filing a new one.
+      options:
+        - label: I have searched the existing issues.
+          required: true
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Link to the README section, website page, or source file.
+      placeholder: README.md#usage
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is missing, unclear, broken, or incorrect?
+    validations:
+      required: true
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested change
+      description: Describe the correction or improvement, if you know it.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add screenshots, browser details, links, or related references.
+    validations:
+      required: false

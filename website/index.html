@@ -1,0 +1,493 @@
+<!-- Copyright (c) Meta Platforms, Inc. and affiliates. -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schlepp — A Multi-View Synthetic Dataset of Humans Carrying Objects</title>
+    <meta
+      name="description"
+      content="Schlepp is a 22-hour, 14.7M-frame multi-camera synthetic dataset of humans picking up, carrying, and placing objects, with dense ground truth across seven modalities."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* index2-specific: full-viewport video hero, nav floated on top.
+         Everything else inherits from styles.css. */
+
+      html { scroll-padding-top: 70px; }
+
+      /* `position: fixed` strips the block default width — pin both edges so
+         the bar spans the viewport like the sticky original. */
+      .nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+      }
+
+      .hero-full {
+        position: relative;
+        height: 100vh;
+        min-height: 640px;
+        overflow: hidden;
+        scroll-margin-top: 0;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        background: #07070a;
+      }
+
+      /* darker at the top (for nav contrast) and bottom (for text),
+         softer in the middle so the video reads through. */
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.55) 0%,
+            rgba(0, 0, 0, 0.15) 32%,
+            rgba(0, 0, 0, 0.25) 55%,
+            rgba(0, 0, 0, 0.85) 100%
+          );
+        pointer-events: none;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 760px;
+        padding: 0 clamp(32px, 6vw, 96px) 96px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      .hero-content .eyebrow { color: rgba(255, 255, 255, 0.7); }
+      .hero-content .hero-title { max-width: 18ch; }
+      .hero-content .hero-sub { color: rgba(244, 244, 246, 0.92); }
+
+      /* CTA buttons over video need a touch more weight to stay legible. */
+      .hero-content .btn:not(.btn-primary) {
+        background: rgba(7, 7, 10, 0.45);
+        border-color: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+      .hero-content .btn:not(.btn-primary):hover {
+        background: rgba(7, 7, 10, 0.7);
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+
+      @media (max-width: 880px) {
+        .hero-content { padding: 0 24px 64px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <a class="nav-wordmark" href="#top">Schlepp</a>
+      <nav class="nav-links">
+        <a href="#why">Why</a>
+        <a href="#data">Data</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#method">Method</a>
+        <a href="#download">Download</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- ─────────────────────────  HERO (full-page video)  ───────────────────────── -->
+      <section class="hero-full">
+        <video
+          class="hero-bg"
+          src="assets/zoom_grid.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-hidden="true"
+        ></video>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+          <h1 class="hero-title">
+            A multi-view synthetic dataset of humans
+            <span class="chromatic">carrying objects</span>
+            through space
+          </h1>
+          <p class="hero-sub">
+            22 hours · 2.3M frames × 6 cameras = 13.8M views · exocentric and egocentric cameras · dense ground truth across seven modalities · MHR body parameters and 3D OBBs
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#">Paper</a>
+            <a class="btn" href="#">arXiv</a>
+            <a class="btn" href="https://huggingface.co/datasets/facebook/schlepp">Dataset</a>
+            <a class="btn" href="https://explorer.projectaria.com/schlepp">Aria Explorer</a>
+            <a class="btn" href="#">Code</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────  WHY  ───────────────────────── -->
+      <section id="why" class="section">
+        <p class="section-eyebrow">Positioning</p>
+        <h2>Bodies in motion, with things in their hands.</h2>
+        <div class="lead">
+          Prior synthetic datasets tend to specialise: BEDLAM focuses on
+          human body motion, Kubric on rigid object dynamics. Schlepp
+          covers the intersection, with sequences of people
+          grasping, carrying, and placing objects in
+          furnished indoor scenes. Each sequence is captured from six
+          synchronized cameras and provides dense ground truth for depth,
+          optical flow, segmentation, and 3D point tracks at every frame.
+        </div>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Type</th>
+                <th>Frames</th>
+                <th>Cameras</th>
+                <th>Ego + Exo</th>
+                <th>HOI</th>
+                <th>Multi-actor</th>
+                <th>Sim. cloth</th>
+                <th>Dense flow</th>
+                <th>Point tracks</th>
+                <th>Dense depth</th>
+                <th>3D body + obj poses</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th>Spring</th>        <td>Sim</td>  <td>6K</td>     <td>2</td>     <td class="absent">–</td> <td class="full">✓</td> <td class="full">✓</td> <td class="full">✓</td> <td class="full">✓</td>         <td class="absent">–</td>          <td class="full">✓</td>      <td class="absent">–</td></tr>
+              <tr><th>Hypersim</th>      <td>Sim</td>  <td>77K</td>    <td>1</td>     <td class="absent">–</td> <td class="absent">–</td> <td class="absent">–</td> <td class="absent">–</td> <td class="absent">–</td>     <td class="absent">–</td>          <td class="full">✓</td>      <td>Obj only</td></tr>
+              <tr><th>PointOdyssey</th>  <td>Sim</td>  <td>208K</td>   <td>1</td>     <td class="absent">–</td> <td class="absent">–</td> <td class="full">✓</td> <td class="absent">–</td> <td class="absent">–</td>         <td class="full">✓</td>          <td class="full">✓</td>      <td>Body only</td></tr>
+              <tr><th>Kubric (MOVi)</th> <td>Sim</td>  <td>1.2M</td>   <td>1</td>     <td class="absent">–</td> <td class="absent">–</td> <td class="absent">–</td> <td class="absent">–</td> <td class="full">✓</td>         <td class="full">✓</td>          <td class="full">✓</td>      <td>Obj only</td></tr>
+              <tr><th>BEDLAM 2.0</th>    <td>Sim</td>  <td>8M</td>     <td>1</td>     <td class="absent">–</td> <td class="absent">–</td> <td class="full">✓</td> <td class="full">✓</td> <td class="absent">–</td>         <td class="absent">–</td>          <td>Partial</td><td>Body only</td></tr>
+              <tr><th>NymeriaPlus</th>   <td>Real</td> <td>&gt;30M</td> <td>Multi</td> <td class="full">✓</td> <td class="full">✓</td> <td class="full">✓</td> <td>Real</td><td class="absent">–</td>       <td class="absent">–</td>          <td class="absent">–</td>      <td class="full">MHR + OBB</td></tr>
+              <tr><th>Ego-Exo4D</th>     <td>Real</td> <td>&gt;100M</td><td>5–6</td>   <td class="full">✓</td> <td class="full">✓</td> <td class="full">✓</td> <td>Real</td><td class="absent">–</td>       <td class="absent">–</td>          <td class="absent">–</td>      <td>Body only</td></tr>
+              <tr class="row-self">
+                <th>Schlepp</th>
+                <td><strong>Sim</strong></td>
+                <td><strong>2.3M</strong></td>
+                <td><strong>6</strong></td>
+                <td class="full">✓</td>
+                <td class="full">✓</td>
+                <td class="full">✓</td>
+                <td class="full">✓</td>
+                <td class="full">Fwd + Bwd</td>
+                <td class="full">~20K / seq</td>
+                <td class="full">✓</td>
+                <td class="full">MHR + OBB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────  TOUR  ───────────────────────── -->
+      <section id="data" class="section">
+        <p class="section-eyebrow">Tour the data</p>
+        <h2>Dense ground truth at full high definition resolution.</h2>
+        <p class="lead">
+          We provide annotations for every pixel of every frame of every camera.
+        </p>
+
+        <div class="viewer">
+          <div class="viewer-controls">
+            <div class="pill-row" role="tablist" aria-label="Modality">
+              <button class="pill active" data-modality="rgb">RGB</button>
+              <button class="pill" data-modality="depth">Depth</button>
+              <button class="pill" data-modality="flow_fwd">Forward flow</button>
+              <button class="pill" data-modality="flow_bwd">Backward flow</button>
+              <button class="pill" data-modality="segmentation">Segmentation</button>
+              <button class="pill" data-modality="point_tracks">Point tracks</button>
+              <button class="pill" data-modality="obbs">3D OBBs</button>
+            </div>
+            <div class="pill-row pill-row-cam" role="tablist" aria-label="Camera">
+              <button class="pill-mini" data-cam="static">static</button>
+              <button class="pill-mini active" data-cam="body_follow">body_follow</button>
+              <button class="pill-mini" data-cam="object_orbit">object_orbit</button>
+              <button class="pill-mini" data-cam="aria_rgb">aria_rgb</button>
+              <button class="pill-mini" data-cam="aria_slamL">aria_slamL</button>
+              <button class="pill-mini" data-cam="aria_slamR">aria_slamR</button>
+            </div>
+          </div>
+          <div class="viewer-stage" id="viewer-stage">
+            <video
+              id="viewer-video"
+              muted
+              playsinline
+              loop
+              preload="auto"
+            ></video>
+            <span class="viewer-label" id="viewer-label">body_follow · RGB</span>
+          </div>
+          <p class="viewer-caption" id="viewer-caption">
+            8-bit colour, full sensor resolution, 30 fps. Co-registered with
+            depth, flow, segmentation, and point tracks at every frame.
+          </p>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────  TASKS  ───────────────────────── -->
+      <section id="tasks" class="section">
+        <p class="section-eyebrow">Downstream Tasks</p>
+        <h2>One dataset, many applications.</h2>
+
+        <div class="task-grid">
+          <article class="task">
+            <div class="task-media placeholder placeholder-tracks"></div>
+            <div class="task-body">
+              <h3>Point tracking</h3>
+              <p>Roughly twenty thousand 3D-consistent point tracks per sequence, stratified across body, clothing, carried objects, and the surrounding scene. Visibility and frustum information is provided for each camera.</p>
+            </div>
+          </article>
+          <article class="task">
+            <div class="task-media placeholder placeholder-flow"></div>
+            <div class="task-body">
+              <h3>Optical flow</h3>
+              <p>Forward and backward dense flow at full sensor resolution for every frame. Co-registered depth allows for principled occlusion handling and validity masking during evaluation.</p>
+            </div>
+          </article>
+          <article class="task">
+            <div class="task-media placeholder placeholder-obb"></div>
+            <div class="task-body">
+              <h3>3D object detection</h3>
+              <p>Oriented 3D bounding boxes and category labels for every object in the scene, including those being carried. Boxes are animated in world coordinates and projected consistently into all six cameras.</p>
+            </div>
+          </article>
+          <article class="task">
+            <div class="task-media placeholder placeholder-pose"></div>
+            <div class="task-body">
+              <h3>Camera pose estimation</h3>
+              <p>Synchronised exocentric and egocentric trajectories of the same scene, with metric scale and the complete intrinsic and extrinsic calibration for each camera.</p>
+            </div>
+          </article>
+          <article class="task">
+            <div class="task-media placeholder placeholder-depth"></div>
+            <div class="task-body">
+              <h3>Monocular depth</h3>
+              <p>Metric depth in furnished indoor environments featuring genuine human-object interaction. Invalid pixels are explicitly marked so that training and evaluation can ignore them.</p>
+            </div>
+          </article>
+          <article class="task">
+            <div class="task-media placeholder placeholder-mhr"></div>
+            <div class="task-body">
+              <h3>Human pose and shape</h3>
+              <p>Per-frame MHR parameters for every actor in the scene. A bundled utility converts these parameters into 3D joint locations via pymomentum forward kinematics.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────  METHOD  ───────────────────────── -->
+      <section id="method" class="section">
+        <p class="section-eyebrow">How it was built</p>
+        <h2>Plausible motion, faithfully captured, verified by humans.</h2>
+
+        <div class="method-row">
+          <div class="method-text">
+            <h3>Distilled grasps from video models</h3>
+            <p>
+              We distil a video model's knowledge about human-object interaction
+              to obtain plausible contact points and grasps across a wide range of carriable objects.
+              Through a multi-step optimization process, we align the 2D guidance with
+              the 3D scene.
+            </p>
+          </div>
+          <div class="method-media">
+            <img src="assets/video_distill.png" alt="Image showing synthetic actor alignment" loading="lazy" />
+          </div>
+        </div>
+
+        <div class="method-row reverse">
+          <div class="method-text">
+            <h3>Human-verified sequences</h3>
+            <p>
+              Trained annotators viewed every single sequence
+              to ensure high-quality motion and realistic object interactions.
+            </p>
+          </div>
+          <div class="method-media placeholder placeholder-timeline">
+            <span class="phase">approach</span>
+            <span class="phase">grasp</span>
+            <span class="phase">carry</span>
+            <span class="phase">place</span>
+          </div>
+        </div>
+
+        <div class="method-row">
+          <div class="method-text">
+            <h3>Diverse human actors</h3>
+            <p>
+              Every actor wears physically simulated garments and shows
+              fabric motion under real body dynamics. Skin textures, body
+              shapes, and clothing combinations are drawn from a diverse
+              pool.
+            </p>
+          </div>
+          <div class="method-media actor-grid">
+            <img src="assets/people/125-RESTAURANT__obj42__cam01__v01.png" alt="Synthetic actor in a restaurant scene" loading="lazy" />
+            <img src="assets/people/248-BAR__obj105__cam03__v00.png" alt="Synthetic actor in a bar scene" loading="lazy" />
+            <img src="assets/people/952-PLAYROOM__obj48__cam03__v00.png" alt="Synthetic actor in a playroom scene" loading="lazy" />
+            <img src="assets/people/1363-COFFEE_SHOP__obj3__cam03__v03.png" alt="Synthetic actor in a coffee shop scene" loading="lazy" />
+            <img src="assets/people/156-RESTAURANT__obj71__cam00__v00.png" alt="Synthetic actor in a restaurant scene" loading="lazy" />
+            <img src="assets/people/282-BAR__obj6__cam00__v00.png" alt="Synthetic actor in a bar scene" loading="lazy" />
+            <img src="assets/people/953-PLAYROOM__obj27__cam00__v02.png" alt="Synthetic actor in a playroom scene" loading="lazy" />
+            <img src="assets/people/63-RESTAURANT__obj67__cam00__v00.png" alt="Synthetic actor in a restaurant scene" loading="lazy" />
+            <img src="assets/people/86-RESTAURANT__obj9__cam00__v01.png" alt="Synthetic actor in a restaurant scene" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────  CAMERAS  ───────────────────────── -->
+      <section class="section">
+        <p class="section-eyebrow">Cameras &amp; coordinates</p>
+        <h2>Six cameras, two distortion models, one frame of reference.</h2>
+
+        <div class="cam-grid">
+          <table class="cam-table">
+            <thead>
+              <tr><th>Name</th><th>Resolution</th><th>Distortion</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>static</code></td>      <td>1920 × 1080</td><td>pinhole</td></tr>
+              <tr><td><code>body_follow</code></td> <td>1920 × 1080</td><td>pinhole</td></tr>
+              <tr><td><code>object_orbit</code></td><td>1920 × 1080</td><td>pinhole</td></tr>
+              <tr><td><code>aria_slamL</code></td>  <td>512 × 512</td>  <td>KB4</td></tr>
+              <tr><td><code>aria_slamR</code></td>  <td>512 × 512</td>  <td>KB4</td></tr>
+              <tr><td><code>aria_rgb</code></td>    <td>2016 × 1512</td><td>KB4</td></tr>
+            </tbody>
+          </table>
+
+          <div class="conventions">
+            <h3>Conventions</h3>
+            <ul>
+              <li>World: <strong>Z-up</strong>, right-handed, metres.</li>
+              <li>Camera: <strong>OpenCV</strong> — X right, Y down, Z forward.</li>
+              <li>Extrinsic on disk: <code>cam_T_world</code> (4 × 4 SE(3)).</li>
+              <li>Aria KB4 fit — <code>cv::fisheye</code> / <code>OPENCV_FISHEYE</code> compatible.</li>
+              <li>Quaternions: <code>[x, y, z, w]</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="aria-compare placeholder placeholder-aria">
+          <span class="caption-left">Aria RGB · KB4 fisheye</span>
+          <span class="caption-right">Undistorted pinhole</span>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────  DOWNLOAD  ───────────────────────── -->
+      <section id="download" class="section">
+        <p class="section-eyebrow">Get the data</p>
+        <h2>Download the data you need and start building.</h2>
+
+        <div class="code-row">
+          <div class="code-card">
+            <div class="code-card-head">
+              <h3>Download</h3>
+              <span class="code-card-meta">Hugging Face · <code>facebook/schlepp</code></span>
+            </div>
+<pre><code><span class="tok-fn">hf</span> download facebook/schlepp \
+    <span class="tok-kw">--repo-type</span> dataset \
+    <span class="tok-kw">--local-dir</span> /data/schlepp \
+    <span class="tok-kw">--include</span> <span class="tok-str">"*_ariargb_rgb.tar"</span> \
+              <span class="tok-str">"*_pointtracks.tar"</span> \
+              <span class="tok-str">"*_metadata.tar"</span> \
+              <span class="tok-str">"*.parquet"</span>
+
+<span class="tok-fn">git</span> clone https://github.com/facebookresearch/schlepp.git
+<span class="tok-fn">pip</span> install <span class="tok-kw">-e</span> schlepp
+
+<span class="tok-fn">cd</span> schlepp && <span class="tok-fn">python</span> <span class="tok-kw">-m</span> scripts.unpack_chunks /data/schlepp</code></pre>
+            <p class="code-note">
+              Only download the cameras and modalities you need.
+              Chunks are stratified by carried-object category, so a partial
+              download is still representative. Always include
+              <code>*_metadata.tar</code> and <code>*.parquet</code>.
+              <br /><br />
+              Then, pull the code and install the dependencies. To interface
+              with the dataset, you'll need to unpack the chunks first.
+            </p>
+          </div>
+
+          <div class="code-card">
+            <div class="code-card-head">
+              <h3>Use the dataset</h3>
+              <span class="code-card-meta">GitHub · <code>facebookresearch/schlepp</code></span>
+            </div>
+<pre><code><span class="tok-kw">from</span> torch.utils.data <span class="tok-kw">import</span> <span class="tok-cls">DataLoader</span>
+<span class="tok-kw">from</span> schlepp <span class="tok-kw">import</span> <span class="tok-cls">SchleppDataset</span>
+<span class="tok-kw">from</span> schlepp.utils <span class="tok-kw">import</span> resize_sample, subsample_tracks
+
+<span class="tok-kw">def</span> <span class="tok-fn">to_point_tracker</span>(sample):
+    sample = <span class="tok-fn">resize_sample</span>(sample, short_side=<span class="tok-num">384</span>)
+    pt = <span class="tok-fn">subsample_tracks</span>(
+        sample[<span class="tok-str">"point_tracks"</span>], <span class="tok-num">512</span>, mode=<span class="tok-str">"stratified"</span>,
+    )
+    cam = sample[<span class="tok-str">"cameras"</span>][<span class="tok-str">"body_follow"</span>]
+    <span class="tok-kw">return</span> (
+        cam[<span class="tok-str">"rgb"</span>].permute(<span class="tok-num">0</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>, <span class="tok-num">1</span>),       <span class="tok-com"># (S, H, W, 3)</span>
+        pt[<span class="tok-str">"trajs_2d_pix"</span>][<span class="tok-str">"body_follow"</span>],    <span class="tok-com"># (S, 512, 2)</span>
+        pt[<span class="tok-str">"visible"</span>][<span class="tok-str">"body_follow"</span>],         <span class="tok-com"># (S, 512)</span>
+    )
+
+ds = <span class="tok-cls">SchleppDataset</span>(
+    <span class="tok-str">"/data/schlepp"</span>,
+    modalities=[<span class="tok-str">"rgb"</span>, <span class="tok-str">"point_tracks"</span>],
+    cameras=<span class="tok-str">"body_follow"</span>,
+    seq_len=<span class="tok-num">24</span>,
+    transform=to_point_tracker,
+)
+
+loader = <span class="tok-cls">DataLoader</span>(ds, batch_size=<span class="tok-num">4</span>, num_workers=<span class="tok-num">8</span>)
+<span class="tok-kw">for</span> rgbs, trajs, visibs <span class="tok-kw">in</span> loader:
+    ...   <span class="tok-com"># train your point tracker</span></code></pre>
+            <p class="code-note">
+              We provide a batteries-included <code>Dataset</code>, which is
+              straight-forward to add to your training loop.
+              See the README for full recipes for flow, depth, pose, MHR, and
+              OBB tasks, plus the bundled evaluation and visualisation tools.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 2026 Meta Reality Labs Research</span>
+        <span class="dot">·</span>
+        <a href="https://huggingface.co/datasets/facebook/schlepp">Hugging Face</a>
+        <span class="dot">·</span>
+        <a href="https://explorer.projectaria.com/schlepp">Aria Explorer</a>
+        <span class="dot">·</span>
+        <a href="#">GitHub</a>
+        <span class="dot">·</span>
+        <a href="#">Paper</a>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "source": "teaser.mp4",
+  "width": 1920,
+  "height": 720,
+  "fps": 30,
+  "cells": {
+    "static":       { "sx": 0,    "sy": 0,   "sw": 640, "sh": 360 },
+    "body_follow":  { "sx": 640,  "sy": 0,   "sw": 640, "sh": 360 },
+    "object_orbit": { "sx": 1280, "sy": 0,   "sw": 640, "sh": 360 },
+    "aria_rgb":     { "sx": 0,    "sy": 360, "sw": 640, "sh": 360 },
+    "aria_slamL":   { "sx": 640,  "sy": 360, "sw": 640, "sh": 360 },
+    "aria_slamR":   { "sx": 1280, "sy": 360, "sw": 640, "sh": 360 }
+  },
+  "sequences": [
+    { "id": "seq_001", "scene": "kitchen",    "num_frames": 142 },
+    { "id": "seq_002", "scene": "office",     "num_frames": 142 },
+    { "id": "seq_003", "scene": "living_room","num_frames": 142 }
+  ]
+}
