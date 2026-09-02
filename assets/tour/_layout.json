@@ -26,43 +26,43 @@
       "rgb": {
         "mp4": "static_rgb.mp4",
         "webm": "static_rgb.webm",
-        "mp4_bytes": 391341,
+        "mp4_bytes": 663012,
         "webm_bytes": 313500
       },
       "depth": {
         "mp4": "static_depth.mp4",
         "webm": "static_depth.webm",
-        "mp4_bytes": 307832,
+        "mp4_bytes": 514800,
         "webm_bytes": 267150
       },
       "flow_fwd": {
         "mp4": "static_flow_fwd.mp4",
         "webm": "static_flow_fwd.webm",
-        "mp4_bytes": 234231,
+        "mp4_bytes": 386967,
         "webm_bytes": 227638
       },
       "flow_bwd": {
         "mp4": "static_flow_bwd.mp4",
         "webm": "static_flow_bwd.webm",
-        "mp4_bytes": 228937,
+        "mp4_bytes": 368925,
         "webm_bytes": 207808
       },
       "segmentation": {
         "mp4": "static_segmentation.mp4",
         "webm": "static_segmentation.webm",
-        "mp4_bytes": 235480,
+        "mp4_bytes": 379405,
         "webm_bytes": 187355
       },
       "point_tracks": {
         "mp4": "static_point_tracks.mp4",
         "webm": "static_point_tracks.webm",
-        "mp4_bytes": 1148116,
+        "mp4_bytes": 1823702,
         "webm_bytes": 1101488
       },
       "obbs": {
         "mp4": "static_obbs.mp4",
         "webm": "static_obbs.webm",
-        "mp4_bytes": 811323,
+        "mp4_bytes": 1357071,
         "webm_bytes": 881162
       }
     },
@@ -70,43 +70,43 @@
       "rgb": {
         "mp4": "body_follow_rgb.mp4",
         "webm": "body_follow_rgb.webm",
-        "mp4_bytes": 1067584,
+        "mp4_bytes": 1824290,
         "webm_bytes": 796105
       },
       "depth": {
         "mp4": "body_follow_depth.mp4",
         "webm": "body_follow_depth.webm",
-        "mp4_bytes": 1072327,
+        "mp4_bytes": 1907861,
         "webm_bytes": 770215
       },
       "flow_fwd": {
         "mp4": "body_follow_flow_fwd.mp4",
         "webm": "body_follow_flow_fwd.webm",
-        "mp4_bytes": 1279396,
+        "mp4_bytes": 1764544,
         "webm_bytes": 669804
       },
       "flow_bwd": {
         "mp4": "body_follow_flow_bwd.mp4",
         "webm": "body_follow_flow_bwd.webm",
-        "mp4_bytes": 1338502,
+        "mp4_bytes": 1867155,
         "webm_bytes": 698950
       },
       "segmentation": {
         "mp4": "body_follow_segmentation.mp4",
         "webm": "body_follow_segmentation.webm",
-        "mp4_bytes": 608203,
+        "mp4_bytes": 1027022,
         "webm_bytes": 396244
       },
       "point_tracks": {
         "mp4": "body_follow_point_tracks.mp4",
         "webm": "body_follow_point_tracks.webm",
-        "mp4_bytes": 7400143,
+        "mp4_bytes": 13001116,
         "webm_bytes": 9324996
       },
       "obbs": {
         "mp4": "body_follow_obbs.mp4",
         "webm": "body_follow_obbs.webm",
-        "mp4_bytes": 2859613,
+        "mp4_bytes": 5039932,
         "webm_bytes": 3010537
       }
     },
@@ -114,43 +114,43 @@
       "rgb": {
         "mp4": "object_orbit_rgb.mp4",
         "webm": "object_orbit_rgb.webm",
-        "mp4_bytes": 1142474,
+        "mp4_bytes": 1920208,
         "webm_bytes": 847324
       },
       "depth": {
         "mp4": "object_orbit_depth.mp4",
         "webm": "object_orbit_depth.webm",
-        "mp4_bytes": 1175483,
+        "mp4_bytes": 2117929,
         "webm_bytes": 944068
       },
       "flow_fwd": {
         "mp4": "object_orbit_flow_fwd.mp4",
         "webm": "object_orbit_flow_fwd.webm",
-        "mp4_bytes": 1399673,
+        "mp4_bytes": 2029780,
         "webm_bytes": 751716
       },
       "flow_bwd": {
         "mp4": "object_orbit_flow_bwd.mp4",
         "webm": "object_orbit_flow_bwd.webm",
-        "mp4_bytes": 1437832,
+        "mp4_bytes": 2139502,
         "webm_bytes": 784580
       },
       "segmentation": {
         "mp4": "object_orbit_segmentation.mp4",
         "webm": "object_orbit_segmentation.webm",
-        "mp4_bytes": 807811,
+        "mp4_bytes": 1295828,
         "webm_bytes": 559118
       },
       "point_tracks": {
         "mp4": "object_orbit_point_tracks.mp4",
         "webm": "object_orbit_point_tracks.webm",
-        "mp4_bytes": 6824799,
+        "mp4_bytes": 11849747,
         "webm_bytes": 7730468
       },
       "obbs": {
         "mp4": "object_orbit_obbs.mp4",
         "webm": "object_orbit_obbs.webm",
-        "mp4_bytes": 2673345,
+        "mp4_bytes": 4497235,
         "webm_bytes": 2595650
       }
     },
@@ -158,43 +158,43 @@
       "rgb": {
         "mp4": "aria_rgb_rgb.mp4",
         "webm": "aria_rgb_rgb.webm",
-        "mp4_bytes": 1885330,
+        "mp4_bytes": 3489981,
         "webm_bytes": 2045413
       },
       "depth": {
         "mp4": "aria_rgb_depth.mp4",
         "webm": "aria_rgb_depth.webm",
-        "mp4_bytes": 1642520,
+        "mp4_bytes": 3080646,
         "webm_bytes": 1593740
       },
       "flow_fwd": {
         "mp4": "aria_rgb_flow_fwd.mp4",
         "webm": "aria_rgb_flow_fwd.webm",
-        "mp4_bytes": 1763988,
+        "mp4_bytes": 2588110,
         "webm_bytes": 739595
       },
       "flow_bwd": {
         "mp4": "aria_rgb_flow_bwd.mp4",
         "webm": "aria_rgb_flow_bwd.webm",
-        "mp4_bytes": 1740716,
+        "mp4_bytes": 2548259,
         "webm_bytes": 711256
       },
       "segmentation": {
         "mp4": "aria_rgb_segmentation.mp4",
         "webm": "aria_rgb_segmentation.webm",
-        "mp4_bytes": 2275340,
+        "mp4_bytes": 4224602,
         "webm_bytes": 2420418
       },
       "point_tracks": {
         "mp4": "aria_rgb_point_tracks.mp4",
         "webm": "aria_rgb_point_tracks.webm",
-        "mp4_bytes": 7491986,
+        "mp4_bytes": 13589228,
         "webm_bytes": 8825681
       },
       "obbs": {
         "mp4": "aria_rgb_obbs.mp4",
         "webm": "aria_rgb_obbs.webm",
-        "mp4_bytes": 4935951,
+        "mp4_bytes": 9057362,
         "webm_bytes": 5792441
       }
     },
@@ -202,43 +202,43 @@
       "rgb": {
         "mp4": "aria_slamL_rgb.mp4",
         "webm": "aria_slamL_rgb.webm",
-        "mp4_bytes": 434276,
+        "mp4_bytes": 762349,
         "webm_bytes": 484630
       },
       "depth": {
         "mp4": "aria_slamL_depth.mp4",
         "webm": "aria_slamL_depth.webm",
-        "mp4_bytes": 563328,
+        "mp4_bytes": 968352,
         "webm_bytes": 708574
       },
       "flow_fwd": {
         "mp4": "aria_slamL_flow_fwd.mp4",
         "webm": "aria_slamL_flow_fwd.webm",
-        "mp4_bytes": 517299,
+        "mp4_bytes": 789643,
         "webm_bytes": 320267
       },
       "flow_bwd": {
         "mp4": "aria_slamL_flow_bwd.mp4",
         "webm": "aria_slamL_flow_bwd.webm",
-        "mp4_bytes": 514753,
+        "mp4_bytes": 796906,
         "webm_bytes": 320718
       },
       "segmentation": {
         "mp4": "aria_slamL_segmentation.mp4",
         "webm": "aria_slamL_segmentation.webm",
-        "mp4_bytes": 1071880,
+        "mp4_bytes": 1669196,
         "webm_bytes": 1294707
       },
       "point_tracks": {
         "mp4": "aria_slamL_point_tracks.mp4",
         "webm": "aria_slamL_point_tracks.webm",
-        "mp4_bytes": 2005360,
+        "mp4_bytes": 3635152,
         "webm_bytes": 2422793
       },
       "obbs": {
         "mp4": "aria_slamL_obbs.mp4",
         "webm": "aria_slamL_obbs.webm",
-        "mp4_bytes": 1353047,
+        "mp4_bytes": 2391959,
         "webm_bytes": 1661460
       }
     },
@@ -246,43 +246,43 @@
       "rgb": {
         "mp4": "aria_slamR_rgb.mp4",
         "webm": "aria_slamR_rgb.webm",
-        "mp4_bytes": 438609,
+        "mp4_bytes": 767233,
         "webm_bytes": 472296
       },
       "depth": {
         "mp4": "aria_slamR_depth.mp4",
         "webm": "aria_slamR_depth.webm",
-        "mp4_bytes": 600273,
+        "mp4_bytes": 1066919,
         "webm_bytes": 803058
       },
       "flow_fwd": {
         "mp4": "aria_slamR_flow_fwd.mp4",
         "webm": "aria_slamR_flow_fwd.webm",
-        "mp4_bytes": 564166,
+        "mp4_bytes": 867051,
         "webm_bytes": 368441
       },
       "flow_bwd": {
         "mp4": "aria_slamR_flow_bwd.mp4",
         "webm": "aria_slamR_flow_bwd.webm",
-        "mp4_bytes": 562810,
+        "mp4_bytes": 856761,
         "webm_bytes": 353097
       },
       "segmentation": {
         "mp4": "aria_slamR_segmentation.mp4",
         "webm": "aria_slamR_segmentation.webm",
-        "mp4_bytes": 839900,
+        "mp4_bytes": 1362182,
         "webm_bytes": 914362
       },
       "point_tracks": {
         "mp4": "aria_slamR_point_tracks.mp4",
         "webm": "aria_slamR_point_tracks.webm",
-        "mp4_bytes": 2032439,
+        "mp4_bytes": 3657570,
         "webm_bytes": 2507921
       },
       "obbs": {
         "mp4": "aria_slamR_obbs.mp4",
         "webm": "aria_slamR_obbs.webm",
-        "mp4_bytes": 1367794,
+        "mp4_bytes": 2381672,
         "webm_bytes": 1627012
       }
     }
