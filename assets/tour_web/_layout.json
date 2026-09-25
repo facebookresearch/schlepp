@@ -1,0 +1,207 @@
+{
+  "sequence_id": "1286-EVENTS_ROOM__obj3__cam03__v03",
+  "scene_id": null,
+  "scene_type": "EVENTS_ROOM",
+  "num_frames": 140,
+  "fps": 30.0,
+  "cameras": [
+    "static",
+    "body_follow",
+    "object_orbit",
+    "aria_rgb",
+    "aria_slamL",
+    "aria_slamR"
+  ],
+  "modalities": [
+    "rgb",
+    "depth",
+    "flow_fwd",
+    "flow_bwd",
+    "segmentation",
+    "point_tracks",
+    "obbs"
+  ],
+  "files": {
+    "static": {
+      "rgb": {
+        "mp4": "static_rgb.mp4",
+        "mp4_bytes": 175986
+      },
+      "depth": {
+        "mp4": "static_depth.mp4",
+        "mp4_bytes": 154855
+      },
+      "flow_fwd": {
+        "mp4": "static_flow_fwd.mp4",
+        "mp4_bytes": 99105
+      },
+      "flow_bwd": {
+        "mp4": "static_flow_bwd.mp4",
+        "mp4_bytes": 95978
+      },
+      "segmentation": {
+        "mp4": "static_segmentation.mp4",
+        "mp4_bytes": 139129
+      },
+      "point_tracks": {
+        "mp4": "static_point_tracks.mp4",
+        "mp4_bytes": 441995
+      },
+      "obbs": {
+        "mp4": "static_obbs.mp4",
+        "mp4_bytes": 394483
+      }
+    },
+    "body_follow": {
+      "rgb": {
+        "mp4": "body_follow_rgb.mp4",
+        "mp4_bytes": 372782
+      },
+      "depth": {
+        "mp4": "body_follow_depth.mp4",
+        "mp4_bytes": 444056
+      },
+      "flow_fwd": {
+        "mp4": "body_follow_flow_fwd.mp4",
+        "mp4_bytes": 537934
+      },
+      "flow_bwd": {
+        "mp4": "body_follow_flow_bwd.mp4",
+        "mp4_bytes": 562600
+      },
+      "segmentation": {
+        "mp4": "body_follow_segmentation.mp4",
+        "mp4_bytes": 308285
+      },
+      "point_tracks": {
+        "mp4": "body_follow_point_tracks.mp4",
+        "mp4_bytes": 2273580
+      },
+      "obbs": {
+        "mp4": "body_follow_obbs.mp4",
+        "mp4_bytes": 1000368
+      }
+    },
+    "object_orbit": {
+      "rgb": {
+        "mp4": "object_orbit_rgb.mp4",
+        "mp4_bytes": 401189
+      },
+      "depth": {
+        "mp4": "object_orbit_depth.mp4",
+        "mp4_bytes": 491540
+      },
+      "flow_fwd": {
+        "mp4": "object_orbit_flow_fwd.mp4",
+        "mp4_bytes": 568344
+      },
+      "flow_bwd": {
+        "mp4": "object_orbit_flow_bwd.mp4",
+        "mp4_bytes": 582654
+      },
+      "segmentation": {
+        "mp4": "object_orbit_segmentation.mp4",
+        "mp4_bytes": 396482
+      },
+      "point_tracks": {
+        "mp4": "object_orbit_point_tracks.mp4",
+        "mp4_bytes": 2074728
+      },
+      "obbs": {
+        "mp4": "object_orbit_obbs.mp4",
+        "mp4_bytes": 947300
+      }
+    },
+    "aria_rgb": {
+      "rgb": {
+        "mp4": "aria_rgb_rgb.mp4",
+        "mp4_bytes": 680868
+      },
+      "depth": {
+        "mp4": "aria_rgb_depth.mp4",
+        "mp4_bytes": 553107
+      },
+      "flow_fwd": {
+        "mp4": "aria_rgb_flow_fwd.mp4",
+        "mp4_bytes": 697373
+      },
+      "flow_bwd": {
+        "mp4": "aria_rgb_flow_bwd.mp4",
+        "mp4_bytes": 688411
+      },
+      "segmentation": {
+        "mp4": "aria_rgb_segmentation.mp4",
+        "mp4_bytes": 732966
+      },
+      "point_tracks": {
+        "mp4": "aria_rgb_point_tracks.mp4",
+        "mp4_bytes": 1959210
+      },
+      "obbs": {
+        "mp4": "aria_rgb_obbs.mp4",
+        "mp4_bytes": 1069776
+      }
+    },
+    "aria_slamL": {
+      "rgb": {
+        "mp4": "aria_slamL_rgb.mp4",
+        "mp4_bytes": 237329
+      },
+      "depth": {
+        "mp4": "aria_slamL_depth.mp4",
+        "mp4_bytes": 320196
+      },
+      "flow_fwd": {
+        "mp4": "aria_slamL_flow_fwd.mp4",
+        "mp4_bytes": 334367
+      },
+      "flow_bwd": {
+        "mp4": "aria_slamL_flow_bwd.mp4",
+        "mp4_bytes": 334454
+      },
+      "segmentation": {
+        "mp4": "aria_slamL_segmentation.mp4",
+        "mp4_bytes": 590401
+      },
+      "point_tracks": {
+        "mp4": "aria_slamL_point_tracks.mp4",
+        "mp4_bytes": 928891
+      },
+      "obbs": {
+        "mp4": "aria_slamL_obbs.mp4",
+        "mp4_bytes": 697179
+      }
+    },
+    "aria_slamR": {
+      "rgb": {
+        "mp4": "aria_slamR_rgb.mp4",
+        "mp4_bytes": 240847
+      },
+      "depth": {
+        "mp4": "aria_slamR_depth.mp4",
+        "mp4_bytes": 345267
+      },
+      "flow_fwd": {
+        "mp4": "aria_slamR_flow_fwd.mp4",
+        "mp4_bytes": 361917
+      },
+      "flow_bwd": {
+        "mp4": "aria_slamR_flow_bwd.mp4",
+        "mp4_bytes": 366488
+      },
+      "segmentation": {
+        "mp4": "aria_slamR_segmentation.mp4",
+        "mp4_bytes": 460202
+      },
+      "point_tracks": {
+        "mp4": "aria_slamR_point_tracks.mp4",
+        "mp4_bytes": 950719
+      },
+      "obbs": {
+        "mp4": "aria_slamR_obbs.mp4",
+        "mp4_bytes": 712442
+      }
+    }
+  },
+  "total_bytes": 138499966
+}
