@@ -290,4 +290,46 @@
       }, 1600);
     });
   });
+  // ─── method carousel: steps through the method figure ────────────────
+  const mc = document.querySelector(".mc");
+  if (mc) {
+    const slides = [...mc.querySelectorAll(".mc-slide")];
+    const dots = [...mc.querySelectorAll(".mc-dot")];
+    const groups = [...mc.querySelectorAll(".mc-group")];
+    const prev = mc.querySelector(".mc-btn.prev");
+    const next = mc.querySelector(".mc-btn.next");
+    const count = mc.querySelector(".mc-count");
+    let current = 0;
+    const go = (i) => {
+      current = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, k) => {
+        s.classList.toggle("active", k === current);
+        s.setAttribute("aria-hidden", k !== current);
+      });
+      dots.forEach((d, k) => d.classList.toggle("active", k === current));
+      prev.disabled = current === 0;
+      next.disabled = current === slides.length - 1;
+      count.textContent = `${current + 1} / ${slides.length}`;
+      const stage = slides[current].dataset.stage;
+      groups.forEach((g) => g.classList.toggle("active", g.dataset.stage === stage));
+    };
+    dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
+    prev.addEventListener("click", () => go(current - 1));
+    next.addEventListener("click", () => go(current + 1));
+    mc.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") { go(current - 1); e.preventDefault(); }
+      if (e.key === "ArrowRight") { go(current + 1); e.preventDefault(); }
+    });
+    // Horizontal swipe on touch screens.
+    const stageEl = mc.querySelector(".mc-stage");
+    let x0 = null;
+    stageEl.addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") x0 = e.clientX; });
+    stageEl.addEventListener("pointerup", (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 40) go(current + (dx < 0 ? 1 : -1));
+    });
+    go(0);
+  }
 })();
