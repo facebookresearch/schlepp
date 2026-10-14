@@ -444,9 +444,6 @@ tbody th { font-weight: 600; white-space: nowrap; }
   .mc-f:hover img { transform: translate(-50%, -50%) scale(1); filter: none; }
   .mc-f:first-child:hover img, .mc-f:last-child:hover img { transform: translateY(-50%) scale(1); }
 }
-/* "?" hangs above the arrow, so the arrow stays on the frames' centre line like the others */
-.mc-arrowq { position: relative; display: flex; flex: none; }
-.mc-q { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.1rem; font-family: "Passion One", sans-serif; font-size: 1.5rem; line-height: 1; color: var(--muted); }
 .mc-arrow { flex: none; width: 1.4rem; height: 1.4rem; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .mc-slide figcaption { margin-top: 1rem; }
 .mc-slide figcaption p { margin: 0; color: var(--muted); max-width: 60ch; }
