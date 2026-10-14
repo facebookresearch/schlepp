@@ -15,7 +15,8 @@
 // behind their head. Speeds vary per snake and a few are fast. Everything is a pure function of
 // the scroll position, so scrolling up rewinds.
 //
-// Attributes: cols, rows, arcs, ratio (band fill 0..1), seed (omit for a new layout per load),
+// Attributes: cols, rows ("fit": as many whole rows as fit the parent's height, so a clipped window
+// never shows a partial row), arcs, ratio (band fill 0..1), seed (omit for a new layout per load),
 // colors (space-separated CSS colours), crawl (px of scrolling per tile for a normal snake; omit
 // for a static pattern), start-now (share of snakes ready on the first scrolled pixel; default
 // START_NOW_P).
@@ -62,12 +63,26 @@ const turns = ([dx, dy]) => [0, 1].map(s => {
 });
 
 class TruchetPattern extends HTMLElement {
-  connectedCallback() { this.setup(); this.update(); }
-  disconnectedCallback() { crawlers.delete(this); }
+  connectedCallback() {
+    this.setup(); this.update();
+    if (this.getAttribute("rows") === "fit") {   // re-lay the pattern when a different row count fits
+      this.ro = new ResizeObserver(() => {
+        if (this.fitRows(this.cols) !== this.rows) { this.setup(); this.last = null; this.update(); }
+      });
+      this.ro.observe(this.parentElement);
+    }
+  }
+  disconnectedCallback() { crawlers.delete(this); this.ro?.disconnect(); }
+
+  fitRows(cols) {
+    const { clientWidth: w, clientHeight: h } = this.parentElement;
+    return w && h ? Math.max(1, Math.floor(h / (w / cols))) : 6;
+  }
 
   setup() {
     const num = (k, d) => +(this.getAttribute(k) ?? d);
-    const cols = num("cols", 6), rows = num("rows", 6), n = num("arcs", 6), ratio = num("ratio", 0.1085);
+    const cols = num("cols", 6), n = num("arcs", 6), ratio = num("ratio", 0.1085);
+    const rows = this.getAttribute("rows") === "fit" ? this.fitRows(cols) : num("rows", 6);
     const rand = this.rand = mulberry32(num("seed", Math.floor(Math.random() * 2 ** 32)));
     this.tickPx = num("crawl", 0) / SLOW_TICKS;
     const startNow = num("start-now", START_NOW_P);

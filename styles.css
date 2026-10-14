@@ -336,23 +336,42 @@ tbody th { font-weight: 600; white-space: nowrap; }
 }
 .viewer-caption { color: var(--muted); font-size: 0.9rem; margin: 0.75rem 0 0; }
 
-/* tasks */
-.task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
-.task-grid article { padding: 1rem 1.1rem; border-radius: 10px; background: var(--cream); }
-.task-grid h4 { margin-bottom: 0.5rem; }
-.task-grid ul { margin: 0; padding: 0; list-style: none; font-size: 0.875rem; line-height: 1.45; color: var(--muted); }
-.task-grid li { position: relative; padding-left: 0.9rem; }
-.task-grid li + li { margin-top: 0.3rem; }
-.task-grid li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: 50%;
-  background: var(--copper);
+/* tasks: three themed rows (motion, geometry, bodies and objects), tinted like the stats */
+.task-themes { display: grid; grid-template-columns: 8.5rem 1fr 1fr; gap: 0.75rem; }
+.t-wine { --tone: var(--wine); }
+.t-gold { --tone: var(--gold); }
+.t-copper { --tone: var(--copper); }
+.task-theme {
+  grid-column: 1;
+  align-self: center;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--tone), #000 25%);
 }
+.task {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  column-gap: 0.9rem;
+  align-content: start;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tone) 16%, #fff);
+}
+.task-icon { grid-row: span 3; width: 3rem; height: 3rem; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.task-icon .ac { stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.2; }
+.task-icon .dot { fill: var(--ink); stroke: none; }
+.task-icon .trail { stroke-width: 2; stroke-dasharray: 0 3.4; }
+.task-icon .solid { fill: color-mix(in srgb, var(--tone), #000 15%); stroke: none; }
+.task-icon .fill { fill: color-mix(in srgb, var(--tone) 30%, #fff); stroke: var(--ink); }
+.task-icon .hidden { stroke-dasharray: 2 2.2; stroke-width: 1.2; opacity: 0.6; }
+.task-icon .layers { stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.6; }   /* depth: outlined stack */
+.task-icon .boxes { fill: color-mix(in srgb, var(--tone) 16%, #fff); stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.4; }   /* outlined; filled with the card colour so front boxes hide back edges */
+.task-icon .figure { fill: color-mix(in srgb, var(--tone), #000 15%); stroke: none; }        /* person, arms open */
+.task-icon .figure .limbs { fill: none; stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 3.6; }
+.task h4 { margin: 0 0 0.15rem; }
+.task strong { font-size: 0.9rem; font-weight: 600; line-height: 1.35; color: color-mix(in srgb, var(--tone), #000 25%); }
+.task p { grid-column: 2; margin: 0.3rem 0 0; font-size: 0.85rem; line-height: 1.45; color: var(--muted); }
 
 /* method */
 .method-row {
@@ -625,7 +644,8 @@ footer a:hover { color: var(--wine); }
   .hero, .method-row, .details-grid { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .picker { grid-template-columns: 1fr 1fr; }
-  .task-grid { grid-template-columns: 1fr 1fr; }
+  .task-themes { grid-template-columns: 1fr 1fr; }
+  .task-theme { grid-column: 1 / -1; margin-top: 0.5rem; }
   .deco-side { display: none; }
 }
 
@@ -639,7 +659,7 @@ footer a:hover { color: var(--wine); }
   .panel { padding: 1rem; }
   .deco-band { margin-inline: -1rem; }
   h2 { font-size: 1.4rem; }
-  .task-grid { grid-template-columns: 1fr; }
+  .task-themes { grid-template-columns: 1fr; }
   .picker { grid-template-columns: 1fr; }
   .stats { grid-template-columns: 1fr 1fr; }
   .stats li:last-child { grid-column: span 2; }

@@ -13,7 +13,7 @@
   <link rel="preload" href="assets/paper/mottle.png" as="image">
   <link rel="preload" href="assets/paper/speckles.png" as="image">
 <link rel="stylesheet" href="styles.css?v=20">
-<script src="truchet.js?v=20" defer></script>
+<script src="truchet.js?v=21" defer></script>
 <script src="main.js?v=20" defer></script>
 </head>
 <body>
@@ -68,14 +68,14 @@
             <a href="https://github.com/facebookresearch/schlepp">GitHub</a>
           </div>
         </div>
-        <div class="deco deco-side"><truchet-pattern crawl="250" start-now="0.8" cols="12" rows="8" arcs="6" ratio="0.3"
+        <div class="deco deco-side"><truchet-pattern crawl="250" start-now="0.8" cols="12" rows="fit" arcs="6" ratio="0.3"
           colors="var(--wine) var(--gold) var(--copper)"></truchet-pattern></div>
       </div>
       <ul class="stats">
-        <li class="gold"><strong>13.3M <em>views</em></strong><span>2.2M frames × 6 cameras</span></li>
-        <li class="copper"><strong>6 <em>cameras</em></strong><span>3 exocentric, 3 egocentric</span></li>
+        <li class="gold"><strong>13.3M <em>views</em></strong><span>2.2M frames<br />× 6 cameras</span></li>
+        <li class="copper"><strong>6 <em>cameras</em></strong><span>3 exocentric,<br />3 egocentric</span></li>
         <li class="wine"><strong>7 <em>modalities</em></strong><span>dense ground truth</span></li>
-        <li class="gold"><strong>Full HD</strong><span>1920 × 1080 exo, 2016 × 1512 Aria RGB</span></li>
+        <li class="gold"><strong>Full HD</strong><span>1920 × 1080 exo,<br />2016 × 1512 Aria RGB</span></li>
         <li class="copper"><strong>MHR + OBBs</strong><span>body parameters and 3D object boxes</span></li>
       </ul>
     </section>
@@ -162,33 +162,18 @@
     <!-- ─────────────────────────  TASKS  ───────────────────────── -->
     <section id="tasks" class="block">
       <h3>Downstream tasks</h3>
-      <div class="task-grid">
-        <article>
-          <h4>Point tracking</h4>
-          <ul><li>~20K 3D tracks per sequence</li><li>Visible and in-frustum masks per camera</li><li>Categorized into body, clothing, carried object, and scene background</li></ul>
-        </article>
-        <article>
-          <h4>Optical flow</h4>
-          <ul><li>Forward and backward for every frame</li><li>Same high-resolution resolution as RGB</li><li>Depth available for occlusion and validity masks</li></ul>
-        </article>
-        <article>
-          <h4>3D object detection</h4>
-          <ul><li>Oriented boxes with category labels</li><li>Carried objects animated per frame</li><li>Consistent across all six cameras</li></ul>
-        </article>
-        <article>
-          <h4>Camera pose estimation</h4>
-          <ul><li>3 exocentric and 3 egocentric cameras, synchronized</li><li>Full intrinsics and extrinsics</li><li>Metric scale</li></ul>
-        </article>
-        <article>
-          <h4>Monocular depth</h4>
-          <ul><li>Metric depth in metres</li><li>Furnished indoor scenes with multiple people carrying objects</li><li>Invalid pixels (windows) marked</li></ul>
-        </article>
-        <article>
-          <h4>Human pose and shape</h4>
-          <ul><li>MHR parameters per actor and frame</li><li>Large number of scenes with several actors</li><li>Realistic occlusions</li></ul>
-        </article>
-      </div>
-    </section>
+        <div class="task-themes">
+          <span class="task-theme t-wine">Motion</span>
+          <article class="task t-wine"><svg class="task-icon" viewBox="0 0 40 40" aria-hidden="true"><path class="ac trail" d="M3 33C9 30 13 23 20 22"/><path class="ac trail" d="M5 16C11 15 17 10 27 9"/><path class="ac trail" d="M12 37C20 36 27 32 33 29"/><circle class="dot" cx="20" cy="22" r="2.6"/><circle class="dot" cx="27" cy="9" r="2.6"/><circle class="dot" cx="33" cy="29" r="2.6"/></svg><h4>Point tracking</h4><strong>~20K 3D tracks per sequence</strong><p>Labelled as body, clothing, carried object, or scene, with visibility per camera.</p></article>
+          <article class="task t-wine"><svg class="task-icon" viewBox="0 0 40 40" aria-hidden="true"><path class="ac" d="M4 11C13 5 24 5 33 10M29.4 6.6L33 10L28.4 11.6"/><path class="ac" d="M3 21C12 15 25 15 35 20M31.4 16.6L35 20L30.4 21.6"/><path class="ac" d="M4 31C13 25 24 25 33 30M29.4 26.6L33 30L28.4 31.6"/></svg><h4>Optical flow</h4><strong>Forward and backward</strong><p>At full RGB resolution, with occlusion masks from depth.</p></article>
+          <span class="task-theme t-gold">Geometry</span>
+          <article class="task t-gold"><svg class="task-icon" viewBox="0 0 40 40" aria-hidden="true"><g class="layers"><path d="M20 4.5L34.5 12.5L20 20.5L5.5 12.5Z"/><path d="M5.5 18.5L20 26.5L34.5 18.5"/><path d="M5.5 24.5L20 32.5L34.5 24.5"/></g></svg><h4>Monocular depth</h4><strong>Metric depth in metres</strong><p>Furnished indoor scenes with people carrying objects; invalid pixels such as windows are masked.</p></article>
+          <article class="task t-gold"><svg class="task-icon" viewBox="0 0 40 40" aria-hidden="true"><path class="ac fill" d="M27 8L36 13V31L27 26Z"/><path d="M5 21L27 8M5 21L36 13M5 21L36 31M5 21L27 26"/><circle class="dot" cx="5" cy="21" r="2.2"/></svg><h4>Camera pose estimation</h4><strong>Six synchronized cameras</strong><p>Three exocentric and three egocentric, with full intrinsics and extrinsics at metric scale.</p></article>
+          <span class="task-theme t-copper">Bodies and objects</span>
+          <article class="task t-copper"><svg class="task-icon" viewBox="0 0 40 40" aria-hidden="true"><g class="figure"><circle cx="20" cy="6.3" r="4.1"/><rect x="15.3" y="12.2" width="9.4" height="13.6" rx="3.6"/><path class="limbs" d="M16.6 14.6L10.6 25.6M23.4 14.6L29.4 25.6M17.9 24L16.4 36.6M22.1 24L23.6 36.6"/></g></svg><h4>Human pose and shape</h4><strong>MHR parameters per actor</strong><p>Several actors per scene, often occluding each other and the furniture.</p></article>
+          <article class="task t-copper"><svg class="task-icon" viewBox="0 0 40 40" aria-hidden="true"><g class="boxes"><polygon points="12.4,19.7 18.7,23.3 18.7,12.0 12.4,8.3"/><polygon points="23.3,20.7 18.7,23.3 18.7,12.0 23.3,9.3"/><polygon points="17.0,5.7 23.3,9.3 18.7,12.0 12.4,8.3"/><polygon points="20.4,28.7 30.2,34.3 30.2,29.0 20.4,23.3"/><polygon points="36.0,31.0 30.2,34.3 30.2,29.0 36.0,25.7"/><polygon points="26.2,20.0 36.0,25.7 30.2,29.0 20.4,23.3"/><polygon points="4.0,30.8 8.3,33.3 8.3,28.3 4.0,25.8"/><polygon points="12.6,30.8 8.3,33.3 8.3,28.3 12.6,25.8"/><polygon points="8.3,23.3 12.6,25.8 8.3,28.3 4.0,25.8"/></g></svg><h4>3D object detection</h4><strong>Bounding boxes with categories</strong><p>Fully annotated scenes, where carried objects move every frame.</p></article>
+        </div>
+      </section>
 
     <div class="deco deco-band"><truchet-pattern crawl="250" cols="16" rows="2" arcs="6" ratio="0.3"
       colors="var(--wine) var(--gold) var(--copper)"></truchet-pattern></div>
@@ -214,7 +199,7 @@
           </figure>
           <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="4 of 11" aria-hidden="true">
             <div class="mc-panels mc-single"><img src="assets/method/p17.svg" alt="The room with camera C1 and a person standing in a neutral pose at the table" loading="lazy" decoding="async"></div>
-            <figcaption><h4>Placing a neutral actor</h4><p>We place a randomized person in a neutral pose close to the target object. This fixes the person's scale, simplifying the pose and shape recovery.</p></figcaption>
+            <figcaption><h4>Placing a neutral actor</h4><p>We add a randomized person in a neutral pose close to the target object. This fixes the person's scale, simplifying the pose and shape recovery.</p></figcaption>
           </figure>
           <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="5 of 11" aria-hidden="true">
             <div class="mc-panels mc-pair"><img src="assets/method/p15.svg" alt="Camera view t0: the room with the table" loading="lazy" decoding="async"><span class="mc-arrowq" aria-hidden="true"><span class="mc-q">?</span><svg class="mc-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span><img src="assets/method/p06.svg" alt="Camera view tN: the room without the table" loading="lazy" decoding="async"></div>
