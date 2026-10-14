@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/paper/grain.png" as="image">
+  <link rel="preload" href="assets/paper/mottle.png" as="image">
+  <link rel="preload" href="assets/paper/speckles.png" as="image">
 <link rel="stylesheet" href="styles.css?v=20">
 <script src="truchet.js?v=20" defer></script>
 <script src="main.js?v=20" defer></script>
@@ -197,51 +200,55 @@
 
       <div class="mc" aria-roledescription="carousel" aria-label="How Schlepp is built">
         <div class="mc-stage" tabindex="0">
-          <figure class="mc-slide active" data-stage="0" aria-roledescription="slide" aria-label="1 of 10">
+          <figure class="mc-slide active" data-stage="0" aria-roledescription="slide" aria-label="1 of 11">
             <div class="mc-panels mc-single"><img src="assets/method/p14.svg" alt="A person grips a coffee table; a dashed outline marks where the table should end up" loading="lazy" decoding="async"></div>
             <figcaption><h4>The goal</h4><p>We want to generate a person picking up an object, moving with it inside the room, and placing it down somewhere else. As we want to use arbitrary objects and scenes, we do not want to rely on motion capture data.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="0" aria-roledescription="slide" aria-label="2 of 10" aria-hidden="true">
-            <div class="mc-panels mc-preview"><div class="mc-box mc-box-pose"><span class="mc-box-label">Contact pose<span class="mc-box-desc">Ask a video model how to grasp the object</span></span><img src="assets/method/p04.svg" alt="Grasp frame: a person grips the table" loading="lazy" decoding="async"></div><svg class="mc-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><div class="mc-box mc-box-carry"><span class="mc-box-label">Carry motion<span class="mc-box-desc">Ask a video model how to carry it, starting and ending in the contact pose</span></span><div class="mc-grid"><img src="assets/method/p09.svg" alt="Carry start" loading="lazy" decoding="async"><img src="assets/method/p10.svg" alt="Lifting" loading="lazy" decoding="async"><img src="assets/method/p11.svg" alt="Carrying" loading="lazy" decoding="async"><img src="assets/method/p12.svg" alt="Carry end" loading="lazy" decoding="async"></div></div></div>
-            <figcaption><h4>How to move an object: grasp and carry</h4><p>Video models know how people grab and carry things. We ask them how to do both, in separate stages. This makes 2D-3D alignment more feasible, reduces prompt complexity, and limits motion reconstruction errors.</p></figcaption>
+          <figure class="mc-slide" data-stage="0" aria-roledescription="slide" aria-label="2 of 11" aria-hidden="true">
+            <div class="mc-panels mc-single"><img src="assets/method/p16.svg" alt="The motion split into a grasp, a carry, and the same grasp again" loading="lazy" decoding="async"></div>
+            <figcaption><h4>Moving an object: grasp, carry, grasp</h4><p>We query a video model for the two components that make up a carry sequence separately. This makes 2D-3D alignment more feasible, reduces prompt complexity, and limits motion reconstruction errors.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="3 of 10" aria-hidden="true">
+          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="3 of 11" aria-hidden="true">
             <div class="mc-panels mc-single"><img src="assets/method/p01.svg" alt="Empty room with a level camera C1 facing the coffee table" loading="lazy" decoding="async"></div>
-            <figcaption><h4>Defining the frame</h4><p>We place a camera <i>C</i><sub>1</sub> that frames the desired object in an artist-made 3D room.</p></figcaption>
+            <figcaption><h4>Defining the frame</h4><p>We place a camera <i>C</i><sub>1</sub> that frames the desired object in an artist-made 3D room, which will stage our motion sequence.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="4 of 10" aria-hidden="true">
+          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="4 of 11" aria-hidden="true">
+            <div class="mc-panels mc-single"><img src="assets/method/p17.svg" alt="The room with camera C1 and a person standing in a neutral pose at the table" loading="lazy" decoding="async"></div>
+            <figcaption><h4>Placing a neutral actor</h4><p>We place a randomized person in a neutral pose close to the target object. This fixes the person's scale, simplifying the pose and shape recovery.</p></figcaption>
+          </figure>
+          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="5 of 11" aria-hidden="true">
             <div class="mc-panels mc-pair"><img src="assets/method/p15.svg" alt="Camera view t0: the room with the table" loading="lazy" decoding="async"><span class="mc-arrowq" aria-hidden="true"><span class="mc-q">?</span><svg class="mc-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span><img src="assets/method/p06.svg" alt="Camera view tN: the room without the table" loading="lazy" decoding="async"></div>
-            <figcaption><h4>Conditioning the video model to touch the object</h4><p>Initially, we want to know how to grasp the object. By removing the object, we nudge the model to generate a human walking into the frame and carrying the object outside the frame, a sequence that naturally includes a grasp.</p></figcaption>
+            <figcaption><h4>Conditioning the video model to touch the object</h4><p>By removing the object, we nudge the model to have the human touch the object and carry it outside the frame, a sequence that naturally includes a grasp.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="5 of 10" aria-hidden="true">
-            <div class="mc-panels mc-strip"><span class="mc-f mc-cond"><img src="assets/method/p02.svg" alt="t0: room with the table" loading="lazy" decoding="async"></span><span class="mc-f mc-dim"><img src="assets/method/p03.svg" alt="t1: a generated person walks in" loading="lazy" decoding="async"></span><span class="mc-f mc-key"><img src="assets/method/p04.svg" alt="tg: the generated person grips the table" loading="lazy" decoding="async"></span><span class="mc-f mc-dim"><img src="assets/method/p05.svg" alt="t2: the generated person carries the table out" loading="lazy" decoding="async"></span><span class="mc-f mc-cond"><img src="assets/method/p06.svg" alt="tN: room without the table" loading="lazy" decoding="async"></span></div>
-            <figcaption><h4>Generating the grasp motion</h4><p>The video model generates a person who walks in and carries the object out. We keep only the grasp frame <i>t</i><sub>g</sub>, the moment where the object is about to move.</p></figcaption>
+          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="6 of 11" aria-hidden="true">
+            <div class="mc-panels mc-strip"><span class="mc-f mc-cond"><img src="assets/method/p18.svg" alt="t0: the actor stands at the table" loading="lazy" decoding="async"></span><span class="mc-f mc-key"><img src="assets/method/p04.svg" alt="tg: the generated person grips the table" loading="lazy" decoding="async"></span><span class="mc-f mc-dim"><img src="assets/method/p05.svg" alt="t_g+k: the generated person carries the table out" loading="lazy" decoding="async"></span><span class="mc-f mc-cond"><img src="assets/method/p06.svg" alt="tN: room without the table" loading="lazy" decoding="async"></span></div>
+            <figcaption><h4>Generating the grasp motion</h4><p>The video model completes the sequence, including a grasp frame <i>t</i><sub>g</sub>, where the object is about to move. We discard the remaining frames.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="6 of 10" aria-hidden="true">
+          <figure class="mc-slide" data-stage="1" aria-roledescription="slide" aria-label="7 of 11" aria-hidden="true">
             <div class="mc-panels mc-pair"><img src="assets/method/p04.svg" alt="Grasp frame tg" loading="lazy" decoding="async"><svg class="mc-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><img src="assets/method/p07.svg" alt="The extracted body, shown on its own" loading="lazy" decoding="async"></div>
             <figcaption><h4>Extracting the contact pose</h4><p>We estimate the body <b class="sym-hat">m</b> in the grasp frame and refine it into the contact pose <b>m</b><sup class="sym-star">&#8902;</sup>. We ensure that the person and grasp are in alignment with the 3D world.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="7 of 10" aria-hidden="true">
+          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="8 of 11" aria-hidden="true">
             <div class="mc-panels mc-single"><img src="assets/method/p08.svg" alt="Overview with camera C2, the start pose and the same pose moved and turned to the end position" loading="lazy" decoding="async"></div>
             <figcaption><h4>Setting up the carry sequence conditioning</h4><p>To tightly condition the sequence the video model needs to hallucinate, we define an end pose that reuses <b>m</b><sup class="sym-star">&#8902;</sup>, translated by &Delta; and rotated by &psi;. For better framing, we choose a new camera <i>C</i><sub>2</sub>.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="8 of 10" aria-hidden="true">
+          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="9 of 11" aria-hidden="true">
             <div class="mc-panels mc-pair"><img src="assets/method/p09.svg" alt="Camera view s0: start state" loading="lazy" decoding="async"><svg class="mc-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><img src="assets/method/p12.svg" alt="Camera view sN: end state" loading="lazy" decoding="async"></div>
-            <figcaption><h4>Conditioning for carry</h4><p>We render the start and end states from the new camera <i>C</i><sub>2</sub> as the first and last frames for the carry motion sequence to be generated.</p></figcaption>
+            <figcaption><h4>Conditioning for carry</h4><p>We render the start and end states from the new camera <i>C</i><sub>2</sub> as the first and last frames for the carry motion sequence.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="9 of 10" aria-hidden="true">
-            <div class="mc-panels mc-strip"><span class="mc-f mc-cond"><img src="assets/method/p09.svg" alt="s0: start state" loading="lazy" decoding="async"></span><span class="mc-f"><img src="assets/method/p10.svg" alt="s1: the generated person lifts the table" loading="lazy" decoding="async"></span><span class="mc-f"><img src="assets/method/p11.svg" alt="s2: the generated person carries the table" loading="lazy" decoding="async"></span><span class="mc-f mc-cond"><img src="assets/method/p12.svg" alt="sN: end state" loading="lazy" decoding="async"></span></div>
+          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="10 of 11" aria-hidden="true">
+            <div class="mc-panels mc-strip"><span class="mc-f mc-cond"><img src="assets/method/p09.svg" alt="s0: start state" loading="lazy" decoding="async"></span><span class="mc-f"><img src="assets/method/p10.svg" alt="s_i: the generated person lifts the table" loading="lazy" decoding="async"></span><span class="mc-f"><img src="assets/method/p11.svg" alt="s_j: the generated person carries the table" loading="lazy" decoding="async"></span><span class="mc-f mc-cond"><img src="assets/method/p12.svg" alt="sN: end state" loading="lazy" decoding="async"></span></div>
             <figcaption><h4>Generating the carry motion</h4><p>The video model produces a sequence of frames showing the lift, the walk, and the set-down.</p></figcaption>
           </figure>
-          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="10 of 10" aria-hidden="true">
+          <figure class="mc-slide" data-stage="2" aria-roledescription="slide" aria-label="11 of 11" aria-hidden="true">
             <div class="mc-panels mc-single"><img src="assets/method/p13.svg" alt="The extracted bodies of all four frames along the carry path, with the table" loading="lazy" decoding="async"></div>
             <figcaption><h4>Recovering the carry motion</h4><p>We extract the pose in every frame, smooth the motion, and "glue" the object to the hands. This eliminates tracking errors and plausibly matches real carrying motion.</p></figcaption>
           </figure>
         </div>
         <div class="mc-nav">
-          <button type="button" class="mc-btn prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-          <div class="mc-dots"><div class="mc-group active" data-stage="0"><span class="mc-group-label">Goal</span><div class="mc-group-dots"><button type="button" class="mc-dot active" aria-label="Step 1: Goal"></button><button type="button" class="mc-dot" aria-label="Step 2: Goal"></button></div></div><div class="mc-group" data-stage="1"><span class="mc-group-label">Contact pose</span><div class="mc-group-dots"><button type="button" class="mc-dot" aria-label="Step 3: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 4: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 5: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 6: Contact pose"></button></div></div><div class="mc-group" data-stage="2"><span class="mc-group-label">Carry motion</span><div class="mc-group-dots"><button type="button" class="mc-dot" aria-label="Step 7: Carry motion"></button><button type="button" class="mc-dot" aria-label="Step 8: Carry motion"></button><button type="button" class="mc-dot" aria-label="Step 9: Carry motion"></button><button type="button" class="mc-dot" aria-label="Step 10: Carry motion"></button></div></div></div>
-          <span class="mc-count" aria-live="polite">1 / 10</span>
+          <button type="button" class="mc-btn prev" aria-label="Previous step" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="mc-dots"><div class="mc-group active" data-stage="0"><span class="mc-group-label">Goal</span><div class="mc-group-dots"><button type="button" class="mc-dot active" aria-label="Step 1: Goal"></button><button type="button" class="mc-dot" aria-label="Step 2: Goal"></button></div></div><div class="mc-group" data-stage="1"><span class="mc-group-label">Contact pose</span><div class="mc-group-dots"><button type="button" class="mc-dot" aria-label="Step 3: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 4: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 5: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 6: Contact pose"></button><button type="button" class="mc-dot" aria-label="Step 7: Contact pose"></button></div></div><div class="mc-group" data-stage="2"><span class="mc-group-label">Carry motion</span><div class="mc-group-dots"><button type="button" class="mc-dot" aria-label="Step 8: Carry motion"></button><button type="button" class="mc-dot" aria-label="Step 9: Carry motion"></button><button type="button" class="mc-dot" aria-label="Step 10: Carry motion"></button><button type="button" class="mc-dot" aria-label="Step 11: Carry motion"></button></div></div></div>
+          <span class="mc-count" aria-live="polite">1 / 11</span>
           <button type="button" class="mc-btn next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
         </div>
       </div>

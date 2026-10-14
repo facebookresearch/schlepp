@@ -23,7 +23,11 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--cream);
+  /* Paper: grain, soft mottling, and speckles laid over the cream. The tiles are balanced so
+     the page keeps the same overall colour before and after they load. */
+  background-color: var(--cream);
+  background-image: url("assets/paper/speckles.png"), url("assets/paper/grain.png"), url("assets/paper/mottle.png");
+  background-size: 600px, 96px, 640px;
   color: var(--ink);
   font: 1rem/1.6 system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
@@ -421,19 +425,9 @@ tbody th { font-weight: 600; white-space: nowrap; }
   .mc-f:hover img { transform: translate(-50%, -50%) scale(1); filter: none; }
   .mc-f:first-child:hover img, .mc-f:last-child:hover img { transform: translateY(-50%) scale(1); }
 }
-}
-/* Two-stage preview: the contact pose on the left, the carry motion on the right. */
-.mc-panels.mc-preview { gap: 0.9rem; }
-.mc-box { display: flex; flex-direction: column; gap: 0.45rem; flex: 1 1 0; min-width: 0; }
-.mc-box-carry { flex-grow: 1.9; }
-.mc-box-label { font-size: 0.75rem; font-weight: 600; }
-.mc-box-desc { display: block; margin-top: 0.1rem; font-weight: 400; color: var(--muted); }
-.mc-box-pose .mc-box-label { color: #d55e00; }   /* the figure's contact-pose orange */
-.mc-box-carry .mc-box-label { color: #0072b2; }  /* the figure's carry blue */
-.mc-box img { display: block; width: 100%; height: auto; }
-.mc-grid { display: grid; grid-template-columns: 1fr 1fr; }
-.mc-arrowq { display: flex; flex-direction: column; align-items: center; flex: none; }
-.mc-q { font-family: "Passion One", sans-serif; font-size: 1.5rem; line-height: 1; color: var(--muted); }
+/* "?" hangs above the arrow, so the arrow stays on the frames' centre line like the others */
+.mc-arrowq { position: relative; display: flex; flex: none; }
+.mc-q { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.1rem; font-family: "Passion One", sans-serif; font-size: 1.5rem; line-height: 1; color: var(--muted); }
 .mc-arrow { flex: none; width: 1.4rem; height: 1.4rem; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .mc-slide figcaption { margin-top: 1rem; }
 .mc-slide figcaption p { margin: 0; color: var(--muted); max-width: 60ch; }
@@ -455,7 +449,8 @@ tbody th { font-weight: 600; white-space: nowrap; }
   cursor: pointer;
   transition: var(--colour-fade), opacity 0.3s var(--ease-apple);
 }
-.mc-btn:hover:not(:disabled) { color: var(--wine); }
+.mc-btn:not(:disabled) { background: var(--wine); color: #fff; }   /* disabled ones stay faded cream */
+.mc-btn:hover:not(:disabled) { background: #651823; }
 .mc-btn:disabled { opacity: 0.35; cursor: default; }
 .mc-btn svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .mc-dots { display: flex; align-items: flex-end; gap: 1.1rem; }
@@ -484,10 +479,6 @@ tbody th { font-weight: 600; white-space: nowrap; }
   .mc-panels.mc-strip { gap: 0.4rem; }
   .mc-f.mc-cond { flex-grow: 0; margin: 0 !important; }
   .mc-count { display: none; }
-  /* Slide 2 stays side by side on phones (small frames; people can pinch to zoom). */
-  .mc-panels.mc-preview { gap: 0.4rem 0.5rem; }
-  .mc-box-desc { display: none; }
-  .mc-preview .mc-arrow { width: 1rem; height: 1rem; }
   .mc-nav { justify-content: space-between; }
 }
 @media (prefers-reduced-motion: reduce) {
