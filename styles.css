@@ -391,6 +391,28 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .actor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
 .actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
 
+/* method scrollytelling: the figure pins to the top of the screen while the step captions
+   scroll up beneath it; the caption crossing the reading line picks the figure. */
+.sc { margin-top: 2rem; }
+.sc-figure { position: sticky; top: 0; z-index: 2; padding: 1rem 0 0.75rem; background: #fff; }
+.sc-now { margin: 0 0 0.5rem; font-size: 0.75rem; font-weight: 600; color: var(--wine); }
+.sc-stage { display: grid; }
+.sc-fig {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s var(--ease-apple), visibility 0s linear 0.45s;
+}
+.sc-fig.active { opacity: 1; visibility: visible; transition-delay: 0s; }
+.sc-steps { padding-bottom: 25vh; }
+.sc-group-label { margin: 2.5rem 0 0; font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+.sc-step { min-height: 42vh; padding: 1rem 0; max-width: 60ch; opacity: 0.35; transition: opacity 0.35s var(--ease-apple); }
+.sc-step.active { opacity: 1; }
+.sc-step p { margin: 0; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .sc-fig, .sc-step { transition: none; }
+}
+
 /* method carousel: one step at a time; all slides share one grid cell, so the stage is as tall
    as the tallest step and nothing jumps when stepping. */
 .mc { margin-top: 2rem; }

@@ -332,4 +332,29 @@
     });
     go(0);
   }
+  // ─── method scrollytelling: the step crossing the reading line picks the figure ───
+  const sc = document.querySelector(".sc");
+  if (sc) {
+    const figs = [...sc.querySelectorAll(".sc-fig")];
+    const steps = [...sc.querySelectorAll(".sc-step")];
+    const now = sc.querySelector(".sc-now");
+    const labels = { 0: "Goal", 1: "Contact pose", 2: "Carry motion" };
+    const show = (i) => {
+      figs.forEach((f, k) => f.classList.toggle("active", k === i));
+      steps.forEach((s, k) => s.classList.toggle("active", k === i));
+      now.textContent = labels[steps[i].closest(".sc-group").dataset.stage];
+    };
+    // The active step is the last one whose top has crossed the reading line at 65% of the
+    // viewport height, below the pinned figure.
+    let current = -1;
+    const pick = () => {
+      const line = innerHeight * 0.65;
+      let i = 0;
+      steps.forEach((s, k) => { if (s.getBoundingClientRect().top < line) i = k; });
+      if (i !== current) { current = i; show(i); }
+    };
+    addEventListener("scroll", pick, { passive: true });
+    addEventListener("resize", pick);
+    pick();
+  }
 })();
