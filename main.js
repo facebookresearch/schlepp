@@ -290,71 +290,46 @@
       }, 1600);
     });
   });
-  // ─── method carousel: steps through the method figure ────────────────
-  const mc = document.querySelector(".mc");
-  if (mc) {
-    const slides = [...mc.querySelectorAll(".mc-slide")];
-    const dots = [...mc.querySelectorAll(".mc-dot")];
-    const groups = [...mc.querySelectorAll(".mc-group")];
-    const prev = mc.querySelector(".mc-btn.prev");
-    const next = mc.querySelector(".mc-btn.next");
-    const count = mc.querySelector(".mc-count");
-    let current = 0;
-    const go = (i) => {
-      current = Math.max(0, Math.min(slides.length - 1, i));
-      slides.forEach((s, k) => {
-        s.classList.toggle("active", k === current);
-        s.setAttribute("aria-hidden", k !== current);
-      });
-      dots.forEach((d, k) => d.classList.toggle("active", k === current));
-      prev.disabled = current === 0;
-      next.disabled = current === slides.length - 1;
-      count.textContent = `${current + 1} / ${slides.length}`;
-      const stage = slides[current].dataset.stage;
-      groups.forEach((g) => g.classList.toggle("active", g.dataset.stage === stage));
-    };
-    dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
-    prev.addEventListener("click", () => go(current - 1));
-    next.addEventListener("click", () => go(current + 1));
-    mc.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") { go(current - 1); e.preventDefault(); }
-      if (e.key === "ArrowRight") { go(current + 1); e.preventDefault(); }
-    });
-    // Horizontal swipe on touch screens.
-    const stageEl = mc.querySelector(".mc-stage");
-    let x0 = null;
-    stageEl.addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") x0 = e.clientX; });
-    stageEl.addEventListener("pointerup", (e) => {
-      if (x0 === null) return;
-      const dx = e.clientX - x0;
-      x0 = null;
-      if (Math.abs(dx) > 40) go(current + (dx < 0 ? 1 : -1));
-    });
-    go(0);
-  }
-  // ─── method scrollytelling: the step crossing the reading line picks the figure ───
+  // ─── method scrollytelling ("sticky side" on wide screens) ───────────
+  // Each step holds its own figure (phones show them stacked). On wide screens the figures are
+  // copied into the pinned column, and the step crossing the middle of the screen picks one.
   const sc = document.querySelector(".sc");
   if (sc) {
-    const figs = [...sc.querySelectorAll(".sc-fig")];
     const steps = [...sc.querySelectorAll(".sc-step")];
-    const now = sc.querySelector(".sc-now");
-    const labels = { 0: "Goal", 1: "Contact pose", 2: "Carry motion" };
-    const show = (i) => {
-      figs.forEach((f, k) => f.classList.toggle("active", k === i));
-      steps.forEach((s, k) => s.classList.toggle("active", k === i));
-      now.textContent = labels[steps[i].closest(".sc-group").dataset.stage];
-    };
-    // The active step is the last one whose top has crossed the reading line at 65% of the
-    // viewport height, below the pinned figure.
+    const figure = sc.querySelector(".sc-figure");
+    const stage = sc.querySelector(".sc-stage");
+    const figs = steps.map((step) => {
+      const fig = document.createElement("div");
+      fig.className = "sc-fig";
+      fig.append(step.querySelector(".mc-panels").cloneNode(true));
+      stage.append(fig);
+      return fig;
+    });
+    const wide = matchMedia("(min-width: 721px)");
     let current = -1;
+    const show = (i) => {
+      if (i === current) return;
+      current = i;
+      steps.forEach((s, k) => s.classList.toggle("active", k === i));
+      figs.forEach((f, k) => f.classList.toggle("active", k === i));
+    };
+    // Sizes in px from innerHeight, not vh (mobile browser bars change vh while scrolling).
+    const layout = () => {
+      const h = innerHeight;
+      steps.forEach((s) => { s.style.minHeight = wide.matches ? `${Math.round(h * 0.75)}px` : ""; });
+      figure.style.top = wide.matches ? `${Math.max(16, Math.round((h - figure.offsetHeight) / 2))}px` : "";
+    };
     const pick = () => {
-      const line = innerHeight * 0.65;
+      if (!wide.matches) return;
+      const line = innerHeight / 2;
       let i = 0;
       steps.forEach((s, k) => { if (s.getBoundingClientRect().top < line) i = k; });
-      if (i !== current) { current = i; show(i); }
+      show(i);
     };
-    addEventListener("scroll", pick, { passive: true });
-    addEventListener("resize", pick);
+    layout();
     pick();
+    addEventListener("scroll", pick, { passive: true });
+    addEventListener("resize", () => { layout(); pick(); });
+    wide.addEventListener("change", () => { layout(); pick(); });
   }
 })();

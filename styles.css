@@ -391,41 +391,40 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .actor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
 .actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
 
-/* method scrollytelling: the figure pins to the top of the screen while the step captions
-   scroll up beneath it; the caption crossing the reading line picks the figure. */
+/* method: scrollytelling. Wide screens use the "sticky side" pattern: step captions in a
+   column on the left, the figure pinned and vertically centred on the right (its top and the
+   step heights are set in px from innerHeight by main.js; vh jumps as mobile browser bars
+   resize). Phones stack each step's figure above its caption. */
 .sc { margin-top: 2rem; }
-.sc-figure { position: sticky; top: 0; z-index: 2; padding: 1rem 0 0.75rem; background: #fff; }
-.sc-now { margin: 0 0 0.5rem; font-size: 0.75rem; font-weight: 600; color: var(--wine); }
-.sc-stage { display: grid; }
-.sc-fig {
-  grid-area: 1 / 1;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.45s var(--ease-apple), visibility 0s linear 0.45s;
+.sc-figure { display: none; }
+.sc-step { margin-bottom: 2.5rem; }
+.sc-step h4 { margin: 1rem 0 0.35rem; }
+.sc-step p { margin: 0; color: var(--muted); max-width: 60ch; }
+.sc-stage-label { margin: 0 0 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--wine); }
+@media (min-width: 721px) {
+  .sc { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr); column-gap: 2.5rem; }
+  .sc-steps { grid-column: 1; grid-row: 1; }
+  .sc-step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0;
+    opacity: 0.3;
+    transition: opacity 0.4s var(--ease-apple);
+  }
+  .sc-step.active { opacity: 1; }
+  .sc-step > .mc-panels { display: none; }     /* shown in the pinned figure instead */
+  .sc-step h4 { margin-top: 0; }
+  .sc-figure { display: block; grid-column: 2; grid-row: 1; align-self: start; position: sticky; }
+  .sc-stage { display: grid; }
+  .sc-fig {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s var(--ease-apple), visibility 0s linear 0.45s;
+  }
+  .sc-fig.active { opacity: 1; visibility: visible; transition-delay: 0s; }
 }
-.sc-fig.active { opacity: 1; visibility: visible; transition-delay: 0s; }
-.sc-steps { padding-bottom: 25vh; }
-.sc-group-label { margin: 2.5rem 0 0; font-size: 0.75rem; font-weight: 600; color: var(--muted); }
-.sc-step { min-height: 42vh; padding: 1rem 0; max-width: 60ch; opacity: 0.35; transition: opacity 0.35s var(--ease-apple); }
-.sc-step.active { opacity: 1; }
-.sc-step p { margin: 0; color: var(--muted); }
-@media (prefers-reduced-motion: reduce) {
-  .sc-fig, .sc-step { transition: none; }
-}
-
-/* method carousel: one step at a time; all slides share one grid cell, so the stage is as tall
-   as the tallest step and nothing jumps when stepping. */
-.mc { margin-top: 2rem; }
-.mc-stage { display: grid; outline: none; border-radius: 10px; }
-.mc-stage:focus-visible { box-shadow: 0 0 0 2px var(--gold); }
-.mc-slide {
-  grid-area: 1 / 1;
-  margin: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.45s var(--ease-apple), visibility 0s linear 0.45s;
-}
-.mc-slide.active { opacity: 1; visibility: visible; transition-delay: 0s; }
 .mc-panels {
   display: flex;
   align-items: center;
@@ -467,60 +466,18 @@ tbody th { font-weight: 600; white-space: nowrap; }
   .mc-f:first-child:hover img, .mc-f:last-child:hover img { transform: translateY(-50%) scale(1); }
 }
 .mc-arrow { flex: none; width: 1.4rem; height: 1.4rem; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.mc-slide figcaption { margin-top: 1rem; }
-.mc-slide figcaption p { margin: 0; color: var(--muted); max-width: 60ch; }
 .sym-hat { position: relative; display: inline-block; }
 .sym-hat::before { content: "^"; position: absolute; left: 50%; top: -0.4em; transform: translateX(-50%); font-weight: 400; }
 .sym-star { font-size: 1em; line-height: 0; }
-.mc-nav { display: flex; align-items: flex-end; gap: 0.75rem; margin-top: 1rem; }
-.mc-btn {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 2.2rem;
-  height: 2.2rem;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: var(--cream);
-  color: var(--ink);
-  cursor: pointer;
-  transition: var(--colour-fade), opacity 0.3s var(--ease-apple);
-}
-.mc-btn:not(:disabled) { background: var(--wine); color: #fff; }   /* disabled ones stay faded cream */
-.mc-btn:hover:not(:disabled) { background: #651823; }
-.mc-btn:disabled { opacity: 0.35; cursor: default; }
-.mc-btn svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.mc-dots { display: flex; align-items: flex-end; gap: 1.1rem; }
-.mc-group { display: flex; flex-direction: column; gap: 0.35rem; }
-.mc-group-label { font-size: 0.75rem; font-weight: 500; color: var(--muted); white-space: nowrap; transition: var(--colour-fade); }
-.mc-group.active .mc-group-label { color: var(--wine); }
-.mc-group-dots { display: flex; align-items: center; gap: 0.4rem; height: 0.55rem; }
-.mc-dot {
-  width: 0.55rem;
-  height: 0.55rem;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: var(--faint);
-  cursor: pointer;
-  transition: background-color 0.3s var(--ease-apple), width 0.3s var(--ease-apple);
-}
-.mc-dot.active { width: 1.4rem; background: var(--wine); }
-.mc-count { margin-left: auto; font-size: 0.875rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 @media (max-width: 720px) {
   .mc-panels { height: 230px; padding: 0.9rem; flex-wrap: wrap; align-content: center; }
-  .mc-f { flex: 0 0 calc(50% - 0.2rem); }
-  /* five frames wrap to three rows, so size them by height to fit the fixed box */
-  .mc-strip:has(> .mc-f:nth-child(5)) .mc-f { flex: none; height: calc((100% - 0.8rem) / 3); }
-  .mc-f.mc-key { flex-grow: 0; }
   .mc-panels.mc-strip { gap: 0.4rem; }
+  .mc-f { flex: 0 0 calc(50% - 0.2rem); }
+  .mc-f.mc-key { flex-grow: 0; }
   .mc-f.mc-cond { flex-grow: 0; margin: 0 !important; }
-  .mc-count { display: none; }
-  .mc-nav { justify-content: space-between; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mc-slide, .mc-dot { transition: none; }
+  .sc-step, .sc-fig { transition: none; }
 }
 
 /* cameras */
