@@ -647,7 +647,9 @@ footer a:hover { color: var(--wine); }
 }
 
 @media (max-width: 480px) {
-  main { padding-top: 1rem; }
+  /* The white panel spans the full screen width; the header keeps the 16px inset on its own. */
+  main { width: 100%; padding-top: 1rem; }
+  .masthead { padding-inline: 16px; }
   .viewer-controls { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
   .control-label:not(:first-child) { margin-top: 0.4rem; }
   nav { flex-wrap: nowrap; gap: 0; margin-left: -0.6rem; }
