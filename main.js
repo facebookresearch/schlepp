@@ -397,6 +397,9 @@
     progress();
     addEventListener("scroll", progress, { passive: true });
     addEventListener("resize", () => { layout(); progress(); });
+    // Re-measure when content changes height after load (media, the viewer caption re-wrapping,
+    // fonts), or the freeze would sit where the step-through used to be.
+    new ResizeObserver(() => { layout(); progress(); }).observe(main);
     wide.addEventListener("change", () => { layout(); progress(); });
   }
 })();
