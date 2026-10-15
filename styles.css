@@ -206,7 +206,7 @@ h3 {
 }
 
 /* Section headings get a short copper bar underneath. */
-.block > h3::after, .sc-frame > h3::after {
+.block > h3::after {
   content: "";
   display: block;
   width: 3rem;
@@ -392,8 +392,8 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
 
 /* method: a pinned step-through on wide screens, stacked steps behind a fold on phones.
-   Wide: the whole section (heading, intro, caption, figure, dots) freezes in place while page
-   scrolling advances the steps; caption and figure crossfade, and the stage dots fill as you go.
+   Wide: once the step-through is centred the whole page freezes in place while scrolling
+   advances the steps; caption and figure crossfade, and the stage dots fill as you go.
    Phones: steps stack, figure above caption; the first shows, the rest wait behind a button. */
 .sc-toggle {
   display: flex;
@@ -428,7 +428,7 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .sc-dots, .sc-figure { display: none; }
 @media (min-width: 721px) {
   .sc-toggle { display: none; }
-  .sc-frame { position: sticky; }   /* heading, intro and steps freeze together; top set by main.js */
+  main { position: sticky; }   /* the whole page freezes while stepping; top and spacer set by main.js */
   .sc-pin {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr);

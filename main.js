@@ -291,14 +291,15 @@
     });
   });
   // ─── method: pinned step-through (wide screens) / first step + fold (phones) ──
-  // Each step holds its own figure and caption. On wide screens the whole section (heading
-  // included) freezes in place and page scrolling advances the steps: figures are copied into the pinned column, captions stack in
+  // Each step holds its own figure and caption. On wide screens the whole page freezes once the
+  // step-through is centred, and page scrolling advances the steps: figures are copied into the pinned column, captions stack in
   // one cell, and dots (built from the steps' stages) show progress and jump to a step.
   const sc = document.querySelector(".sc");
   if (sc) {
     const fold = sc.closest(".sc-fold");
-    const track = sc.closest(".sc-track");
-    const frame = track.querySelector(".sc-frame");
+    const pin = sc.querySelector(".sc-pin");
+    const main = document.querySelector("main");
+    const spacer = document.body.appendChild(document.createElement("div"));
     const steps = [...sc.querySelectorAll(".sc-step")];
     const stage = sc.querySelector(".sc-stage");
     const dotsBox = sc.querySelector(".sc-dots");
@@ -342,26 +343,44 @@
       dots.forEach((d, k) => { d.classList.toggle("active", k === i); d.classList.toggle("done", k < i); });
       Object.entries(groups).forEach(([s, g]) => g.classList.toggle("active", s === steps[i].dataset.stage));
     };
+    // The page is a sticky <main> with top = -freezeAt, followed by a spacer of the steps'
+    // length: from scroll position freezeAt on it stays put until the spacer is used up, then
+    // carries on. Content below therefore sits `spacer` px further down the scroll range.
     // Sizes in px from innerHeight, not vh (mobile browser bars change vh while scrolling).
+    let freezeAt = 0, mainTop = 0;
     const layout = () => {
+      main.style.top = "";   // top: auto, so main sits in normal flow while measuring
       if (!wide.matches) {
-        track.style.height = frame.style.top = "";
+        spacer.style.height = "";
         return;
       }
       stepPx = Math.round(innerHeight * 0.6);
-      pinTop = Math.max(16, Math.round((innerHeight - frame.offsetHeight) / 2));
-      frame.style.top = `${pinTop}px`;
-      track.style.height = `${frame.offsetHeight + steps.length * stepPx}px`;
+      mainTop = scrollY + main.getBoundingClientRect().top;
+      pinTop = Math.max(16, Math.round((innerHeight - pin.offsetHeight) / 2));
+      freezeAt = Math.round(scrollY + pin.getBoundingClientRect().top - pinTop);
+      main.style.top = `${-freezeAt}px`;
+      spacer.style.height = `${steps.length * stepPx}px`;
     };
     const progress = () => {
       if (!wide.matches) return;
-      const y = pinTop - track.getBoundingClientRect().top;
-      show(Math.min(steps.length - 1, Math.max(0, Math.floor(y / stepPx))));
+      show(Math.min(steps.length - 1, Math.max(0, Math.floor((scrollY - freezeAt) / stepPx))));
     };
     const jump = (k) => {
-      const top = scrollY + track.getBoundingClientRect().top - pinTop + (k + 0.5) * stepPx;
-      scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
+      scrollTo({ top: freezeAt + (k + 0.5) * stepPx, behavior: smooth ? "smooth" : "auto" });
     };
+    // In-page links measure the frozen layout: targets on screen while frozen (the method heading)
+    // go to the start of the step-through, targets further down past it.
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      const el = a && a.hash && document.querySelector(a.hash);
+      if (!el || !wide.matches) return;
+      e.preventDefault();
+      const y = el.getBoundingClientRect().top - main.getBoundingClientRect().top + mainTop
+        - parseFloat(getComputedStyle(el).scrollMarginTop);
+      const top = y > freezeAt + innerHeight / 2 ? y + steps.length * stepPx : Math.min(y, freezeAt);
+      scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
+      history.pushState(null, "", a.hash);
+    });
 
     // Phones: only the first step shows until the button opens the rest. Without JS all show.
     const toggle = fold.querySelector(".sc-toggle");
