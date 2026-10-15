@@ -206,7 +206,7 @@ h3 {
 }
 
 /* Section headings get a short copper bar underneath. */
-.block > h3::after {
+.block > h3::after, .sc-frame > h3::after {
   content: "";
   display: block;
   width: 3rem;
@@ -392,12 +392,14 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
 
 /* method: a pinned step-through on wide screens, stacked steps behind a fold on phones.
-   Wide: the section pins (top set by main.js from innerHeight) while page scrolling advances
-   the steps; caption and figure crossfade in place, and the stage dots fill as you go.
-   Phones: every step shows its figure above its caption, behind a toggle button. */
-.sc-fold { margin-top: 2rem; }
+   Wide: the whole section (heading, intro, caption, figure, dots) freezes in place while page
+   scrolling advances the steps; caption and figure crossfade, and the stage dots fill as you go.
+   Phones: steps stack, figure above caption; the first shows, the rest wait behind a button. */
 .sc-toggle {
   display: flex;
+  width: 100%;
+  border: 0;
+  font: inherit;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -410,13 +412,15 @@ tbody th { font-weight: 600; white-space: nowrap; }
   list-style: none;
   transition: var(--colour-fade);
 }
-.sc-toggle::-webkit-details-marker { display: none; }
 .sc-toggle:hover { background: #651823; }
+.sc-toggle[hidden] { display: none; }
 .sc-toggle svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s var(--ease-apple); }
-.sc-fold[open] .sc-toggle svg { transform: rotate(180deg); }
-.sc-toggle-close, .sc-fold[open] .sc-toggle-open { display: none; }
-.sc-fold[open] .sc-toggle-close { display: inline; }
-.sc { margin-top: 1.5rem; }
+.sc-fold.open .sc-toggle svg { transform: rotate(180deg); }
+.sc-toggle-close, .sc-fold.open .sc-toggle-open { display: none; }
+.sc-fold.open .sc-toggle-close { display: inline; }
+@media (max-width: 720px) {
+  .sc-fold.folded:not(.open) .sc-step:nth-child(n + 2) { display: none; }
+}
 .sc-step { margin-bottom: 2.5rem; }
 .sc-step h4 { margin: 1rem 0 0.35rem; }
 .sc-step p { margin: 0; color: var(--muted); max-width: 60ch; }
@@ -424,9 +428,8 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .sc-dots, .sc-figure { display: none; }
 @media (min-width: 721px) {
   .sc-toggle { display: none; }
-  .sc { margin-top: 0; }
+  .sc-frame { position: sticky; }   /* heading, intro and steps freeze together; top set by main.js */
   .sc-pin {
-    position: sticky;
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr);
     column-gap: 2.5rem;

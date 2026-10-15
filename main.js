@@ -290,14 +290,15 @@
       }, 1600);
     });
   });
-  // ─── method: pinned step-through (wide screens) / stacked behind a fold (phones) ──
-  // Each step holds its own figure and caption. On wide screens the section pins and page
-  // scrolling advances the steps: figures are copied into the pinned column, captions stack in
+  // ─── method: pinned step-through (wide screens) / first step + fold (phones) ──
+  // Each step holds its own figure and caption. On wide screens the whole section (heading
+  // included) freezes in place and page scrolling advances the steps: figures are copied into the pinned column, captions stack in
   // one cell, and dots (built from the steps' stages) show progress and jump to a step.
   const sc = document.querySelector(".sc");
   if (sc) {
     const fold = sc.closest(".sc-fold");
-    const pin = sc.querySelector(".sc-pin");
+    const track = sc.closest(".sc-track");
+    const frame = track.querySelector(".sc-frame");
     const steps = [...sc.querySelectorAll(".sc-step")];
     const stage = sc.querySelector(".sc-stage");
     const dotsBox = sc.querySelector(".sc-dots");
@@ -344,26 +345,32 @@
     // Sizes in px from innerHeight, not vh (mobile browser bars change vh while scrolling).
     const layout = () => {
       if (!wide.matches) {
-        sc.style.height = pin.style.top = "";
+        track.style.height = frame.style.top = "";
         return;
       }
-      fold.open = true;
       stepPx = Math.round(innerHeight * 0.6);
-      pinTop = Math.max(16, Math.round((innerHeight - pin.offsetHeight) / 2));
-      pin.style.top = `${pinTop}px`;
-      sc.style.height = `${pin.offsetHeight + steps.length * stepPx}px`;
+      pinTop = Math.max(16, Math.round((innerHeight - frame.offsetHeight) / 2));
+      frame.style.top = `${pinTop}px`;
+      track.style.height = `${frame.offsetHeight + steps.length * stepPx}px`;
     };
     const progress = () => {
       if (!wide.matches) return;
-      const y = pinTop - sc.getBoundingClientRect().top;
+      const y = pinTop - track.getBoundingClientRect().top;
       show(Math.min(steps.length - 1, Math.max(0, Math.floor(y / stepPx))));
     };
     const jump = (k) => {
-      const top = scrollY + sc.getBoundingClientRect().top - pinTop + (k + 0.5) * stepPx;
+      const top = scrollY + track.getBoundingClientRect().top - pinTop + (k + 0.5) * stepPx;
       scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
     };
 
-    if (!wide.matches) fold.open = false;
+    // Phones: only the first step shows until the button opens the rest. Without JS all show.
+    const toggle = fold.querySelector(".sc-toggle");
+    fold.classList.add("folded");
+    toggle.hidden = false;
+    toggle.addEventListener("click", () => {
+      toggle.setAttribute("aria-expanded", fold.classList.toggle("open"));
+    });
+
     layout();
     progress();
     addEventListener("scroll", progress, { passive: true });
