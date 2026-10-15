@@ -391,39 +391,85 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .actor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
 .actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
 
-/* method: scrollytelling. Wide screens use the "sticky side" pattern: step captions in a
-   column on the left, the figure pinned and vertically centred on the right (its top and the
-   step heights are set in px from innerHeight by main.js; vh jumps as mobile browser bars
-   resize). Phones stack each step's figure above its caption. */
-.sc { margin-top: 2rem; }
-.sc-figure { display: none; }
+/* method: a pinned step-through on wide screens, stacked steps behind a fold on phones.
+   Wide: the section pins (top set by main.js from innerHeight) while page scrolling advances
+   the steps; caption and figure crossfade in place, and the stage dots fill as you go.
+   Phones: every step shows its figure above its caption, behind a toggle button. */
+.sc-fold { margin-top: 2rem; }
+.sc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: var(--wine);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  transition: var(--colour-fade);
+}
+.sc-toggle::-webkit-details-marker { display: none; }
+.sc-toggle:hover { background: #651823; }
+.sc-toggle svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s var(--ease-apple); }
+.sc-fold[open] .sc-toggle svg { transform: rotate(180deg); }
+.sc-toggle-close, .sc-fold[open] .sc-toggle-open { display: none; }
+.sc-fold[open] .sc-toggle-close { display: inline; }
+.sc { margin-top: 1.5rem; }
 .sc-step { margin-bottom: 2.5rem; }
 .sc-step h4 { margin: 1rem 0 0.35rem; }
 .sc-step p { margin: 0; color: var(--muted); max-width: 60ch; }
 .sc-stage-label { margin: 0 0 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--wine); }
+.sc-dots, .sc-figure { display: none; }
 @media (min-width: 721px) {
-  .sc { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr); column-gap: 2.5rem; }
-  .sc-steps { grid-column: 1; grid-row: 1; }
-  .sc-step {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0;
-    opacity: 0.3;
-    transition: opacity 0.4s var(--ease-apple);
+  .sc-toggle { display: none; }
+  .sc { margin-top: 0; }
+  .sc-pin {
+    position: sticky;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr);
+    column-gap: 2.5rem;
   }
-  .sc-step.active { opacity: 1; }
-  .sc-step > .mc-panels { display: none; }     /* shown in the pinned figure instead */
+  .sc-text { display: flex; flex-direction: column; }
+  .sc-steps { display: grid; }
+  .sc-step {
+    grid-area: 1 / 1;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s var(--ease-apple), visibility 0s linear 0.3s;
+  }
+  .sc-step.active { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .sc-step > .mc-panels, .sc-stage-label { display: none; }
   .sc-step h4 { margin-top: 0; }
-  .sc-figure { display: block; grid-column: 2; grid-row: 1; align-self: start; position: sticky; }
+  .sc-figure { display: block; }
   .sc-stage { display: grid; }
   .sc-fig {
     grid-area: 1 / 1;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.45s var(--ease-apple), visibility 0s linear 0.45s;
+    transition: opacity 0.3s var(--ease-apple), visibility 0s linear 0.3s;
   }
   .sc-fig.active { opacity: 1; visibility: visible; transition-delay: 0s; }
+  /* stage dots: one group per stage, at the bottom of the caption column */
+  .sc-dots { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin-top: auto; padding-top: 1.25rem; }
+  .sc-dot-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .sc-dot-label { font-size: 0.75rem; font-weight: 500; color: var(--muted); white-space: nowrap; transition: var(--colour-fade); }
+  .sc-dot-group.active .sc-dot-label { color: var(--wine); }
+  .sc-dot-row { display: flex; align-items: center; gap: 0.4rem; height: 0.55rem; }
+  .sc-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--faint);
+    cursor: pointer;
+    transition: background-color 0.3s var(--ease-apple), width 0.3s var(--ease-apple);
+  }
+  .sc-dot.done { background: color-mix(in srgb, var(--wine) 35%, #fff); }
+  .sc-dot.active { width: 1.4rem; background: var(--wine); }
 }
 .mc-panels {
   display: flex;
@@ -477,7 +523,7 @@ tbody th { font-weight: 600; white-space: nowrap; }
   .mc-f.mc-cond { flex-grow: 0; margin: 0 !important; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sc-step, .sc-fig { transition: none; }
+  .sc-step, .sc-fig, .sc-dot { transition: none; }
 }
 
 /* cameras */

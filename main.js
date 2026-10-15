@@ -290,14 +290,21 @@
       }, 1600);
     });
   });
-  // ─── method scrollytelling ("sticky side" on wide screens) ───────────
-  // Each step holds its own figure (phones show them stacked). On wide screens the figures are
-  // copied into the pinned column, and the step crossing the middle of the screen picks one.
+  // ─── method: pinned step-through (wide screens) / stacked behind a fold (phones) ──
+  // Each step holds its own figure and caption. On wide screens the section pins and page
+  // scrolling advances the steps: figures are copied into the pinned column, captions stack in
+  // one cell, and dots (built from the steps' stages) show progress and jump to a step.
   const sc = document.querySelector(".sc");
   if (sc) {
+    const fold = sc.closest(".sc-fold");
+    const pin = sc.querySelector(".sc-pin");
     const steps = [...sc.querySelectorAll(".sc-step")];
-    const figure = sc.querySelector(".sc-figure");
     const stage = sc.querySelector(".sc-stage");
+    const dotsBox = sc.querySelector(".sc-dots");
+    const wide = matchMedia("(min-width: 721px)");
+    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const names = { 0: "Goal", 1: "Contact pose", 2: "Carry motion" };
+
     const figs = steps.map((step) => {
       const fig = document.createElement("div");
       fig.className = "sc-fig";
@@ -305,31 +312,62 @@
       stage.append(fig);
       return fig;
     });
-    const wide = matchMedia("(min-width: 721px)");
-    let current = -1;
+
+    const groups = {}, dots = [];
+    steps.forEach((step, k) => {
+      const s = step.dataset.stage;
+      if (!groups[s]) {
+        const g = document.createElement("div");
+        g.className = "sc-dot-group";
+        g.innerHTML = `<span class="sc-dot-label">${names[s]}</span><div class="sc-dot-row"></div>`;
+        dotsBox.append(g);
+        groups[s] = g;
+      }
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "sc-dot";
+      d.setAttribute("aria-label", `Step ${k + 1}: ${step.querySelector("h4").textContent}`);
+      d.addEventListener("click", () => jump(k));
+      groups[s].querySelector(".sc-dot-row").append(d);
+      dots.push(d);
+    });
+
+    let stepPx = 0, pinTop = 0, current = -1;
     const show = (i) => {
       if (i === current) return;
       current = i;
       steps.forEach((s, k) => s.classList.toggle("active", k === i));
       figs.forEach((f, k) => f.classList.toggle("active", k === i));
+      dots.forEach((d, k) => { d.classList.toggle("active", k === i); d.classList.toggle("done", k < i); });
+      Object.entries(groups).forEach(([s, g]) => g.classList.toggle("active", s === steps[i].dataset.stage));
     };
     // Sizes in px from innerHeight, not vh (mobile browser bars change vh while scrolling).
     const layout = () => {
-      const h = innerHeight;
-      steps.forEach((s) => { s.style.minHeight = wide.matches ? `${Math.round(h * 0.75)}px` : ""; });
-      figure.style.top = wide.matches ? `${Math.max(16, Math.round((h - figure.offsetHeight) / 2))}px` : "";
+      if (!wide.matches) {
+        sc.style.height = pin.style.top = "";
+        return;
+      }
+      fold.open = true;
+      stepPx = Math.round(innerHeight * 0.6);
+      pinTop = Math.max(16, Math.round((innerHeight - pin.offsetHeight) / 2));
+      pin.style.top = `${pinTop}px`;
+      sc.style.height = `${pin.offsetHeight + steps.length * stepPx}px`;
     };
-    const pick = () => {
+    const progress = () => {
       if (!wide.matches) return;
-      const line = innerHeight / 2;
-      let i = 0;
-      steps.forEach((s, k) => { if (s.getBoundingClientRect().top < line) i = k; });
-      show(i);
+      const y = pinTop - sc.getBoundingClientRect().top;
+      show(Math.min(steps.length - 1, Math.max(0, Math.floor(y / stepPx))));
     };
+    const jump = (k) => {
+      const top = scrollY + sc.getBoundingClientRect().top - pinTop + (k + 0.5) * stepPx;
+      scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
+    };
+
+    if (!wide.matches) fold.open = false;
     layout();
-    pick();
-    addEventListener("scroll", pick, { passive: true });
-    addEventListener("resize", () => { layout(); pick(); });
-    wide.addEventListener("change", () => { layout(); pick(); });
+    progress();
+    addEventListener("scroll", progress, { passive: true });
+    addEventListener("resize", () => { layout(); progress(); });
+    wide.addEventListener("change", () => { layout(); progress(); });
   }
 })();
