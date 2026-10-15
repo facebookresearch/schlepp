@@ -456,14 +456,15 @@ tbody th { font-weight: 600; white-space: nowrap; }
   }
   .sc-fig.active { opacity: 1; visibility: visible; transition-delay: 0s; }
   /* stage dots: one group per stage, at the bottom of the caption column */
-  .sc-dots { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin-top: auto; padding-top: 1.25rem; }
+  .sc-dots { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-top: auto; padding-top: 1.25rem; }
   .sc-dot-group { display: flex; flex-direction: column; gap: 0.35rem; }
   .sc-dot-label { font-size: 0.75rem; font-weight: 500; color: var(--muted); white-space: nowrap; transition: var(--colour-fade); }
   .sc-dot-group.active .sc-dot-label { color: var(--wine); }
-  .sc-dot-row { display: flex; align-items: center; gap: 0.4rem; height: 0.55rem; }
+  .sc-dot-row { display: flex; align-items: center; gap: 0.45rem; height: 0.7rem; }
   .sc-dot {
-    width: 0.55rem;
-    height: 0.55rem;
+    position: relative;
+    width: 0.7rem;
+    height: 0.7rem;
     padding: 0;
     border: 0;
     border-radius: 999px;
@@ -472,7 +473,20 @@ tbody th { font-weight: 600; white-space: nowrap; }
     transition: background-color 0.3s var(--ease-apple), width 0.3s var(--ease-apple);
   }
   .sc-dot.done { background: color-mix(in srgb, var(--wine) 35%, #fff); }
-  .sc-dot.active { width: 1.4rem; background: var(--wine); }
+  .sc-dot.active { width: 2.2rem; background: var(--wine); }
+  /* progress through the current step: a translucent pill filling the active dot (--p from main.js) */
+  .sc-dot::after {
+    content: "";
+    position: absolute;
+    inset: 2px auto 2px 2px;
+    min-width: calc(0.7rem - 4px);
+    width: calc((100% - 4px) * var(--p, 0));
+    border-radius: inherit;
+    background: rgb(255 255 255 / 0.45);
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-apple);
+  }
+  .sc-dot.active::after { opacity: 1; }
 }
 .mc-panels {
   display: flex;
@@ -526,7 +540,7 @@ tbody th { font-weight: 600; white-space: nowrap; }
   .mc-f.mc-cond { flex-grow: 0; margin: 0 !important; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sc-step, .sc-fig, .sc-dot { transition: none; }
+  .sc-step, .sc-fig, .sc-dot, .sc-dot::after { transition: none; }
 }
 
 /* cameras */

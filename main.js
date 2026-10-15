@@ -363,7 +363,10 @@
     };
     const progress = () => {
       if (!wide.matches) return;
-      show(Math.min(steps.length - 1, Math.max(0, Math.floor((scrollY - freezeAt) / stepPx))));
+      const t = (scrollY - freezeAt) / stepPx;
+      const i = Math.min(steps.length - 1, Math.max(0, Math.floor(t)));
+      show(i);
+      dots[i].style.setProperty("--p", Math.min(1, Math.max(0, t - i)).toFixed(3));
     };
     const jump = (k) => {
       scrollTo({ top: freezeAt + (k + 0.5) * stepPx, behavior: smooth ? "smooth" : "auto" });
