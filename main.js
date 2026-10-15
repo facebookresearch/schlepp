@@ -354,7 +354,7 @@
         spacer.style.height = "";
         return;
       }
-      stepPx = Math.round(innerHeight * 0.6);
+      stepPx = Math.round(innerHeight * 0.4);
       mainTop = scrollY + main.getBoundingClientRect().top;
       pinTop = Math.max(16, Math.round((innerHeight - pin.offsetHeight) / 2));
       freezeAt = Math.round(scrollY + pin.getBoundingClientRect().top - pinTop);
