@@ -12,9 +12,9 @@
   <link rel="preload" href="assets/paper/grain.png" as="image">
   <link rel="preload" href="assets/paper/mottle.png" as="image">
   <link rel="preload" href="assets/paper/speckles.png" as="image">
-<link rel="stylesheet" href="styles.css?v=21">
+<link rel="stylesheet" href="styles.css?v=22">
 <script src="truchet.js?v=21" defer></script>
-<script src="main.js?v=22" defer></script>
+<script src="main.js?v=23" defer></script>
 </head>
 <body>
 <main>
@@ -80,6 +80,63 @@
       </ul>
     </section>
 
+    <!-- ─────────────────────────  TOUR  ───────────────────────── -->
+    <section id="tour" class="block">
+      <h3>Explore the data</h3>
+      <p class="lead">For object interaction, details matter. That is why we provide high-resolution images with dense annotations across cameras.</p>
+
+      <div class="viewer">
+        <div class="viewer-controls">
+          <span class="control-label">Camera</span>
+          <div class="seg-wrap">
+            <button type="button" class="seg-arrow prev" aria-label="Scroll left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <div class="segmented" role="tablist" aria-label="Camera">
+            <span class="seg-indicator" aria-hidden="true"></span>
+            <button role="tab" data-cam="static">Static</button>
+            <button role="tab" data-cam="body_follow" class="active">Body follow</button>
+            <button role="tab" data-cam="object_orbit">Object orbit</button>
+            <span class="seg-divider" aria-hidden="true"></span>
+            <button role="tab" data-cam="aria_rgb">Aria RGB</button>
+            <button role="tab" data-cam="aria_slamL">SLAM left</button>
+            <button role="tab" data-cam="aria_slamR">SLAM right</button>
+          </div>
+            <button type="button" class="seg-arrow next" aria-label="Scroll right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+          <span class="control-label">Modality</span>
+          <div class="seg-wrap">
+            <button type="button" class="seg-arrow prev" aria-label="Scroll left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <div class="segmented" role="tablist" aria-label="Modality">
+            <span class="seg-indicator" aria-hidden="true"></span>
+            <button role="tab" data-modality="overview" class="active">Overview</button>
+            <span class="seg-divider" aria-hidden="true"></span>
+            <button role="tab" data-modality="rgb">RGB</button>
+            <button role="tab" data-modality="depth">Depth</button>
+            <button role="tab" data-modality="segmentation">Segmentation</button>
+            <button role="tab" data-modality="flow_fwd">Fwd flow</button>
+            <button role="tab" data-modality="flow_bwd">Bwd flow</button>
+            <button role="tab" data-modality="point_tracks">Tracks</button>
+            <button role="tab" data-modality="obbs">3D boxes</button>
+          </div>
+            <button type="button" class="seg-arrow next" aria-label="Scroll right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+        <div class="viewer-stage">
+          <video id="viewer-video" muted loop playsinline webkit-playsinline disablepictureinpicture preload="auto"></video>
+          <!-- Hit areas over the overview mosaic (RGB 2×2, five modalities around it); each opens its modality. -->
+          <div class="viewer-tiles">
+            <button type="button" data-tile="rgb" class="tile-big"><span>RGB</span></button>
+            <button type="button" data-tile="depth"><span>Depth</span></button>
+            <button type="button" data-tile="segmentation"><span>Segmentation</span></button>
+            <button type="button" data-tile="flow_fwd"><span>Flow</span></button>
+            <button type="button" data-tile="point_tracks"><span>Tracks</span></button>
+            <button type="button" data-tile="obbs"><span>3D boxes</span></button>
+          </div>
+          <span class="viewer-label" id="viewer-label">body_follow · Overview</span>
+        </div>
+        <p class="viewer-caption" id="viewer-caption">Five modalities next to the RGB frame, all pixel-aligned: depth, segmentation, forward flow, point tracks, and 3D boxes. Select one to see it on its own. Camera: body_follow, 1920 × 1080, pinhole.</p>
+      </div>
+    </section>
+
     <!-- ─────────────────────────  COMPARISON  ───────────────────────── -->
     <section id="dataset" class="block">
       <h3>Comparison</h3>
@@ -110,52 +167,6 @@
             <tr class="self"><th>Schlepp</th><td>Sim</td><td>2.2M</td><td>6</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">MHR + OBB</td></tr>
           </tbody>
         </table>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────  TOUR  ───────────────────────── -->
-    <section id="tour" class="block">
-      <h3>Explore the data</h3>
-      <p class="lead">For object interaction, details matter. That is why we provide high-resolution images with dense annotations across cameras.</p>
-
-      <div class="viewer">
-        <div class="viewer-controls">
-          <span class="control-label">Camera</span>
-          <div class="seg-wrap">
-            <button type="button" class="seg-arrow prev" aria-label="Scroll left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <div class="segmented" role="tablist" aria-label="Camera">
-            <span class="seg-indicator" aria-hidden="true"></span>
-            <button role="tab" data-cam="static">Static</button>
-            <button role="tab" data-cam="body_follow" class="active">Body follow</button>
-            <button role="tab" data-cam="object_orbit">Object orbit</button>
-            <span class="seg-divider" aria-hidden="true"></span>
-            <button role="tab" data-cam="aria_rgb">Aria RGB</button>
-            <button role="tab" data-cam="aria_slamL">SLAM left</button>
-            <button role="tab" data-cam="aria_slamR">SLAM right</button>
-          </div>
-            <button type="button" class="seg-arrow next" aria-label="Scroll right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-          </div>
-          <span class="control-label">Modality</span>
-          <div class="seg-wrap">
-            <button type="button" class="seg-arrow prev" aria-label="Scroll left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <div class="segmented" role="tablist" aria-label="Modality">
-            <span class="seg-indicator" aria-hidden="true"></span>
-            <button role="tab" data-modality="rgb" class="active">RGB</button>
-            <button role="tab" data-modality="depth">Depth</button>
-            <button role="tab" data-modality="segmentation">Segmentation</button>
-            <button role="tab" data-modality="flow_fwd">Fwd flow</button>
-            <button role="tab" data-modality="flow_bwd">Bwd flow</button>
-            <button role="tab" data-modality="point_tracks">Tracks</button>
-            <button role="tab" data-modality="obbs">3D boxes</button>
-          </div>
-            <button type="button" class="seg-arrow next" aria-label="Scroll right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-          </div>
-        </div>
-        <div class="viewer-stage">
-          <video id="viewer-video" muted loop playsinline webkit-playsinline disablepictureinpicture preload="auto"></video>
-          <span class="viewer-label" id="viewer-label">body_follow · RGB</span>
-        </div>
-        <p class="viewer-caption" id="viewer-caption">Rendered colour frames: 8-bit, 30 fps. Camera: body_follow, 1920 × 1080, pinhole.</p>
       </div>
     </section>
 

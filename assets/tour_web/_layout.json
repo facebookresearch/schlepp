@@ -50,6 +50,10 @@
       "obbs": {
         "mp4": "static_obbs.mp4",
         "mp4_bytes": 394483
+      },
+      "overview": {
+        "mp4": "static_overview.mp4",
+        "mp4_bytes": 277452
       }
     },
     "body_follow": {
@@ -80,6 +84,10 @@
       "obbs": {
         "mp4": "body_follow_obbs.mp4",
         "mp4_bytes": 1000368
+      },
+      "overview": {
+        "mp4": "body_follow_overview.mp4",
+        "mp4_bytes": 1007481
       }
     },
     "object_orbit": {
@@ -110,6 +118,10 @@
       "obbs": {
         "mp4": "object_orbit_obbs.mp4",
         "mp4_bytes": 947300
+      },
+      "overview": {
+        "mp4": "object_orbit_overview.mp4",
+        "mp4_bytes": 1013847
       }
     },
     "aria_rgb": {
@@ -140,6 +152,10 @@
       "obbs": {
         "mp4": "aria_rgb_obbs.mp4",
         "mp4_bytes": 1069776
+      },
+      "overview": {
+        "mp4": "aria_rgb_overview.mp4",
+        "mp4_bytes": 1355190
       }
     },
     "aria_slamL": {
@@ -170,6 +186,10 @@
       "obbs": {
         "mp4": "aria_slamL_obbs.mp4",
         "mp4_bytes": 697179
+      },
+      "overview": {
+        "mp4": "aria_slamL_overview.mp4",
+        "mp4_bytes": 1217195
       }
     },
     "aria_slamR": {
@@ -200,6 +220,10 @@
       "obbs": {
         "mp4": "aria_slamR_obbs.mp4",
         "mp4_bytes": 712442
+      },
+      "overview": {
+        "mp4": "aria_slamR_overview.mp4",
+        "mp4_bytes": 1217593
       }
     }
   },

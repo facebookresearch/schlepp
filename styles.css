@@ -336,6 +336,43 @@ tbody th { font-weight: 600; white-space: nowrap; }
 }
 .viewer-caption { color: var(--muted); font-size: 0.9rem; margin: 0.75rem 0 0; }
 
+/* Overview: clickable tiles over the 3×3 mosaic clip (RGB spans the top-left 2×2). The grid is
+   as wide as the letterboxed video: the stage is 16:9, so width = aspect × 9/16 of the stage. */
+.viewer-tiles {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: calc(var(--aspect, 1.7778) * 900% / 16);
+  transform: translateX(-50%);
+  display: none;
+  grid-template: repeat(3, minmax(0, 1fr)) / repeat(3, minmax(0, 1fr));
+}
+.viewer.overview .viewer-tiles { display: grid; }
+.viewer.overview .viewer-label { display: none; }
+.viewer-tiles .tile-big { grid-area: 1 / 1 / 3 / 3; }
+.viewer-tiles button {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+  cursor: pointer;
+}
+.viewer-tiles span {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font: 0.75rem var(--mono);
+  transition: var(--colour-fade);
+}
+.viewer-tiles button:hover span,
+.viewer-tiles button:focus-visible span { background: var(--wine); }
+
 /* tasks: three themed rows (motion, geometry, bodies and objects), tinted like the stats */
 .task-themes { display: grid; grid-template-columns: 8.5rem 1fr 1fr; gap: 0.75rem; }
 .t-wine { --tone: var(--wine); }
@@ -694,6 +731,7 @@ footer a:hover { color: var(--wine); }
   .masthead { padding-inline: 16px; }
   .viewer-controls { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
   .control-label:not(:first-child) { margin-top: 0.4rem; }
+  .viewer-tiles span { left: 0.25rem; bottom: 0.25rem; padding: 0.05rem 0.35rem; font-size: 0.6rem; }
   nav { flex-wrap: nowrap; gap: 0; margin-left: -0.6rem; }
   nav a { padding: 0.45rem 0.6rem; font-size: 0.95rem; }
   nav a.get { margin-left: 0.25rem; }

@@ -99,7 +99,8 @@
     playWhenVisible(stage, () => video);
 
     const modalityCopy = {
-      rgb: { label: "RGB", text: "Rendered colour frames: 8-bit, 30 fps." },
+      overview: { label: "Overview", text: "Five modalities next to the RGB frame, all pixel-aligned: depth, segmentation, forward flow, point tracks, and 3D boxes. Select one to see it on its own." },
+      rgb:{ label: "RGB", text: "Rendered colour frames: 8-bit, 30 fps." },
       depth: { label: "Depth", text: "Metric depth per pixel, in metres. Invalid pixels hold 0." },
       flow_fwd: { label: "Forward flow", text: "Pixel displacement (du, dv) from each frame to the next. Hue shows direction, saturation shows magnitude." },
       flow_bwd: { label: "Backward flow", text: "Pixel displacement (du, dv) from each frame to the previous one, in the same colour coding." },
@@ -116,8 +117,11 @@
       aria_slamL: "512 × 512, KB4 fisheye",
       aria_slamR: "512 × 512, KB4 fisheye",
     };
+    // Clip aspect per camera, so the overview's tile grid covers the letterboxed video exactly.
+    const camAspect = { aria_rgb: 4 / 3, aria_slamL: 1, aria_slamR: 1 };
+    const tiles = viewer.querySelector(".viewer-tiles");
 
-    let activeModality = "rgb";
+    let activeModality = "overview";
     let activeCam = "body_follow";
     let tourFiles = null;
 
@@ -132,6 +136,8 @@
       const m = modalityCopy[activeModality];
       label.textContent = `${activeCam} · ${m.label}`;
       caption.textContent = `${m.text} Camera: ${activeCam}, ${camCopy[activeCam]}.`;
+      viewer.classList.toggle("overview", activeModality === "overview");
+      tiles.style.setProperty("--aspect", camAspect[activeCam] || 16 / 9);
 
       // Each clip gets a fresh <video>: Safari keeps stale frame geometry when one element
       // switches between clips of different sizes, and draws the new clip too small.
@@ -148,7 +154,7 @@
       video = next;
     }
 
-    fetch("assets/tour_web/_layout.json")
+    fetch("assets/tour_web/_layout.json?v=2")
       .then((res) => res.json())
       .then((layout) => {
         tourFiles = layout.files;
@@ -165,6 +171,10 @@
       select(btn.parentElement, btn);
       activeCam = btn.dataset.cam;
       render();
+    }));
+    // A tile in the overview selects its modality, as if its tab had been clicked.
+    tiles.querySelectorAll("[data-tile]").forEach((tile) => tile.addEventListener("click", () => {
+      viewer.querySelector(`[data-modality="${tile.dataset.tile}"]`).click();
     }));
 
     // ─── viewer: hover-prefetch ────────────────────────────────────────
@@ -195,6 +205,7 @@
         btn.addEventListener("blur", disarm);
       };
       viewer.querySelectorAll("[data-modality]").forEach((btn) => watch(btn, () => [activeCam, btn.dataset.modality]));
+      tiles.querySelectorAll("[data-tile]").forEach((tile) => watch(tile, () => [activeCam, tile.dataset.tile]));
       viewer.querySelectorAll("[data-cam]").forEach((btn) => watch(btn, () => [btn.dataset.cam, activeModality]));
     }
 
