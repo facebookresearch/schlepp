@@ -82,6 +82,8 @@ nav a:hover { background: rgb(0 0 0 / 0.05); }
 nav a.get { background: var(--wine); color: #fff; margin-left: 0.5rem; }
 nav a.get:hover { background: #651823; }
 nav a.get svg { width: 1em; height: 1em; }
+nav a.get[aria-disabled="true"],
+nav a.get[aria-disabled="true"]:hover { background: var(--faint); color: var(--muted); cursor: not-allowed; }
 
 .panel {
   flex: 1;
@@ -120,12 +122,12 @@ h2 {
   text-wrap: balance;
 }
 
-.authors { margin: 0 0 0.25rem; font-weight: 500; }
+.authors { margin: 0 0 0.25rem; font-size: 0.85rem; font-weight: 500; line-height: 1.5; }
 .authors a { text-decoration: none; color: inherit; transition: var(--colour-fade); }
 .authors a:hover { text-decoration: underline; color: var(--wine); }
 .authors span { white-space: nowrap; }
 .authors span:not(:last-child)::after { content: ","; }
-.affiliations { margin: 0 0 1.25rem; font-size: 0.9rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0 1.25rem; }
+.affiliations { margin: 0 0 1.25rem; font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0 1.25rem; }
 sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
 .affiliations sup { margin: 0 0.2em 0 0; }
 
@@ -177,6 +179,14 @@ sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
   transition: var(--colour-fade);
 }
 .links a:hover { border-color: var(--wine); color: var(--wine); }
+/* Release status in place of the links: a plain label, deliberately not shaped like a button. */
+.links .soon {
+  padding: 0.4rem 0.95rem;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--muted);
+  font-weight: 500;
+}
 
 /* Arc decorations: a snake pattern inside a clipped window. */
 .deco { position: relative; overflow: hidden; pointer-events: none; }
