@@ -23,6 +23,19 @@ def flow_validity_mask_from_depth(depth: torch.Tensor) -> torch.Tensor:
     return depth > 0
 
 
+def _flow_mask(mask: torch.Tensor, epe: torch.Tensor) -> torch.Tensor:
+    """Broadcast ``mask`` to the ``(..., H, W)`` EPE map as a bool tensor.
+
+    A depth-shaped mask ``(..., 1, H, W)`` (what
+    :func:`flow_validity_mask_from_depth` returns for a sample's depth)
+    has its singleton channel axis dropped first, so it lines up with
+    the per-frame EPE instead of broadcasting across frames.
+    """
+    if mask.dim() == epe.dim() + 1 and mask.shape[-3] == 1:
+        mask = mask.squeeze(-3)                         # shape: (..., H, W)
+    return mask.expand_as(epe).to(torch.bool)
+
+
 def end_point_error(
     pred_flow: torch.Tensor,
     gt_flow: torch.Tensor,
@@ -41,7 +54,8 @@ def end_point_error(
         ``-3``; ``(du, dv)`` in pixel units.
     mask
         Optional boolean mask of shape ``(..., H, W)`` (or broadcastable
-        to that). Pixels where ``mask`` is ``False`` are dropped before
+        to that; a depth-shaped ``(..., 1, H, W)`` mask also works).
+        Pixels where ``mask`` is ``False`` are dropped before
         reduction; pass :func:`flow_validity_mask_from_depth` on the
         corresponding depth map to ignore invalid pixels.
     reduction
@@ -67,13 +81,13 @@ def end_point_error(
     epe = torch.sqrt((delta * delta).sum(dim=-3))       # shape: (..., H, W)
     if reduction == "none":
         if mask is not None:
-            epe = torch.where(mask, epe, torch.full_like(epe, float("nan")))
+            epe = torch.where(_flow_mask(mask, epe), epe, torch.full_like(epe, float("nan")))
         return epe
     if mask is None:
         if reduction == "mean":
             return epe.mean()
         return epe.sum()
-    flat_mask = mask.expand_as(epe)
+    flat_mask = _flow_mask(mask, epe)
     if reduction == "sum":
         return (epe * flat_mask).sum()
     n_valid = flat_mask.sum()
@@ -107,7 +121,7 @@ def _epe_and_gt_mag(
     if mask is None:
         valid = torch.ones_like(epe, dtype=torch.bool)
     else:
-        valid = mask.expand_as(epe).to(torch.bool)
+        valid = _flow_mask(mask, epe)
     return epe, gt_mag, valid
 
 
