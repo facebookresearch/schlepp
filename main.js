@@ -39,6 +39,32 @@
   const teaser = document.querySelector("video.teaser");
   if (teaser && !reducedMotion) playWhenVisible(teaser, () => teaser);
 
+  // Videos below the fold load only once they are about a screen away, so the teaser has the
+  // bandwidth to itself while the page loads.
+  function whenNear(el, fn, margin = "100% 0px") {
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      fn();
+    }, { rootMargin: margin });
+    io.observe(el);
+  }
+
+  // The method walkthrough (preload="none" in the markup) starts once, the first time it is
+  // mostly in view; after that the controls are the viewer's.
+  const methodVideo = document.querySelector("video.method-video");
+  if (methodVideo) {
+    whenNear(methodVideo, () => { methodVideo.preload = "auto"; });
+    if (!reducedMotion) {
+      const io = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        methodVideo.play().catch(() => {});
+      }, { threshold: 0.5 });
+      io.observe(methodVideo);
+    }
+  }
+
   // ─── segmented controls: slide the indicator under the active button ──
   function placeIndicator(track) {
     const active = track.querySelector("button.active");
@@ -124,6 +150,7 @@
     let activeModality = "overview";
     let activeCam = "body_follow";
     let tourFiles = null;
+    let near = false;   // set once the first clip may load (see loadClips below)
 
     // Web encodes (H.264, ≤960px wide) in assets/tour_web; the full-quality originals stay in
     // assets/tour. H.264 plays reliably everywhere (Safari's WebM playback sometimes froze).
@@ -142,7 +169,7 @@
       // Each clip gets a fresh <video>: Safari keeps stale frame geometry when one element
       // switches between clips of different sizes, and draws the new clip too small.
       const url = clipUrl(activeCam, activeModality);
-      if (!url || video.getAttribute("src") === url) return;
+      if (!url || !near || video.getAttribute("src") === url) return;
       const resumeAt = video.currentTime || 0;
       const next = video.cloneNode();
       next.src = url;
@@ -153,6 +180,14 @@
       video.replaceWith(next);
       video = next;
     }
+
+    // The viewer sits right below the teaser, so its first clip waits until the teaser can play
+    // through, or until the viewer is on screen, whichever comes first. (Set up after clipUrl
+    // and render, because an already-playable teaser calls render straight away.)
+    const loadClips = () => { if (!near) { near = true; render(); } };
+    if (teaser && teaser.readyState < 4) teaser.addEventListener("canplaythrough", loadClips, { once: true });
+    else loadClips();
+    whenNear(stage, loadClips, "0px");
 
     fetch("assets/tour_web/_layout.json?v=2")
       .then((res) => res.json())
@@ -217,7 +252,7 @@
   const picker = document.querySelector(".picker");
   const downloadCode = document.getElementById("download-code");
   if (picker && downloadCode) {
-    const boxes = (list) => [...picker.querySelectorAll(`[data-list="${list}"] input:not(:disabled)`)];
+    const boxes = (list) => [...picker.querySelectorAll(`[data-list="${list}"] input:not(:disabled):not(.group-toggle)`)];
     const picked = (list) => boxes(list).filter((b) => b.checked).map((b) => b.value);
     const total = (list) => boxes(list).length;
     const tok = (cls, text) => `<span class="tok-${cls}">${text}</span>`;
@@ -252,21 +287,27 @@
         `${tok("fn", "cd")} schlepp && ${tok("fn", "python")} ${tok("kw", "-m")} scripts.unpack_chunks /data/schlepp`;
     }
 
-    // "All" selects every box in its group; once they are all selected it reads "None" and clears them.
+    // Each group's own checkbox shows none / some / all of its boxes (empty, dash, tick).
+    // Clicking it selects all of them, or clears them when they are all selected already.
     function syncToggles() {
-      picker.querySelectorAll(".toggle-all").forEach((btn) => {
-        const list = btn.closest("fieldset").dataset.list;
-        btn.textContent = picked(list).length === total(list) ? "None" : "All";
+      picker.querySelectorAll(".group-toggle").forEach((toggle) => {
+        const list = toggle.closest("fieldset").dataset.list;
+        const n = picked(list).length;
+        // A locked box (Metadata & index) is always on, so its group is never empty: clearing it leaves a dash.
+        const locked = toggle.closest("fieldset").querySelectorAll("input:disabled:checked").length;
+        toggle.checked = n === total(list);
+        toggle.indeterminate = n + locked > 0 && n < total(list);
       });
     }
-    picker.addEventListener("change", () => { update(); syncToggles(); });
-    picker.querySelectorAll(".toggle-all").forEach((btn) => btn.addEventListener("click", () => {
-      const list = btn.closest("fieldset").dataset.list;
-      const on = picked(list).length !== total(list);
-      boxes(list).forEach((b) => (b.checked = on));
+    picker.addEventListener("change", (e) => {
+      if (e.target.classList.contains("group-toggle")) {
+        const list = e.target.closest("fieldset").dataset.list;
+        const on = picked(list).length !== total(list);
+        boxes(list).forEach((b) => (b.checked = on));
+      }
       update();
       syncToggles();
-    }));
+    });
     update();
     syncToggles();
   }
@@ -301,116 +342,4 @@
       }, 1600);
     });
   });
-  // ─── method: pinned step-through (wide screens) / first step + fold (phones) ──
-  // Each step holds its own figure and caption. On wide screens the whole page freezes once the
-  // step-through is centred, and page scrolling advances the steps: figures are copied into the pinned column, captions stack in
-  // one cell, and dots (built from the steps' stages) show progress and jump to a step.
-  const sc = document.querySelector(".sc");
-  if (sc) {
-    const fold = sc.closest(".sc-fold");
-    const pin = sc.querySelector(".sc-pin");
-    const main = document.querySelector("main");
-    const spacer = document.body.appendChild(document.createElement("div"));
-    const steps = [...sc.querySelectorAll(".sc-step")];
-    const stage = sc.querySelector(".sc-stage");
-    const dotsBox = sc.querySelector(".sc-dots");
-    const wide = matchMedia("(min-width: 721px)");
-    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const names = { 0: "Goal", 1: "Contact pose", 2: "Carry motion" };
-
-    const figs = steps.map((step) => {
-      const fig = document.createElement("div");
-      fig.className = "sc-fig";
-      fig.append(step.querySelector(".mc-panels").cloneNode(true));
-      stage.append(fig);
-      return fig;
-    });
-
-    const groups = {}, dots = [];
-    steps.forEach((step, k) => {
-      const s = step.dataset.stage;
-      if (!groups[s]) {
-        const g = document.createElement("div");
-        g.className = "sc-dot-group";
-        g.innerHTML = `<span class="sc-dot-label">${names[s]}</span><div class="sc-dot-row"></div>`;
-        dotsBox.append(g);
-        groups[s] = g;
-      }
-      const d = document.createElement("button");
-      d.type = "button";
-      d.className = "sc-dot";
-      d.setAttribute("aria-label", `Step ${k + 1}: ${step.querySelector("h4").textContent}`);
-      d.addEventListener("click", () => jump(k));
-      groups[s].querySelector(".sc-dot-row").append(d);
-      dots.push(d);
-    });
-
-    let stepPx = 0, pinTop = 0, current = -1;
-    const show = (i) => {
-      if (i === current) return;
-      current = i;
-      steps.forEach((s, k) => s.classList.toggle("active", k === i));
-      figs.forEach((f, k) => f.classList.toggle("active", k === i));
-      dots.forEach((d, k) => { d.classList.toggle("active", k === i); d.classList.toggle("done", k < i); });
-      Object.entries(groups).forEach(([s, g]) => g.classList.toggle("active", s === steps[i].dataset.stage));
-    };
-    // The page is a sticky <main> with top = -freezeAt, followed by a spacer of the steps'
-    // length: from scroll position freezeAt on it stays put until the spacer is used up, then
-    // carries on. Content below therefore sits `spacer` px further down the scroll range.
-    // Sizes in px from innerHeight, not vh (mobile browser bars change vh while scrolling).
-    let freezeAt = 0, mainTop = 0;
-    const layout = () => {
-      main.style.top = "";   // top: auto, so main sits in normal flow while measuring
-      if (!wide.matches) {
-        spacer.style.height = "";
-        return;
-      }
-      stepPx = Math.round(innerHeight * 0.4);
-      mainTop = scrollY + main.getBoundingClientRect().top;
-      pinTop = Math.max(16, Math.round((innerHeight - pin.offsetHeight) / 2));
-      freezeAt = Math.round(scrollY + pin.getBoundingClientRect().top - pinTop);
-      main.style.top = `${-freezeAt}px`;
-      spacer.style.height = `${steps.length * stepPx}px`;
-    };
-    const progress = () => {
-      if (!wide.matches) return;
-      const t = (scrollY - freezeAt) / stepPx;
-      const i = Math.min(steps.length - 1, Math.max(0, Math.floor(t)));
-      show(i);
-      dots[i].style.setProperty("--p", Math.min(1, Math.max(0, t - i)).toFixed(3));
-    };
-    const jump = (k) => {
-      scrollTo({ top: freezeAt + (k + 0.5) * stepPx, behavior: smooth ? "smooth" : "auto" });
-    };
-    // In-page links measure the frozen layout: targets on screen while frozen (the method heading)
-    // go to the start of the step-through, targets further down past it.
-    document.addEventListener("click", (e) => {
-      const a = e.target.closest('a[href^="#"]');
-      const el = a && a.hash && document.querySelector(a.hash);
-      if (!el || !wide.matches) return;
-      e.preventDefault();
-      const y = el.getBoundingClientRect().top - main.getBoundingClientRect().top + mainTop
-        - parseFloat(getComputedStyle(el).scrollMarginTop);
-      const top = y > freezeAt + innerHeight / 2 ? y + steps.length * stepPx : Math.min(y, freezeAt);
-      scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
-      history.pushState(null, "", a.hash);
-    });
-
-    // Phones: only the first step shows until the button opens the rest. Without JS all show.
-    const toggle = fold.querySelector(".sc-toggle");
-    fold.classList.add("folded");
-    toggle.hidden = false;
-    toggle.addEventListener("click", () => {
-      toggle.setAttribute("aria-expanded", fold.classList.toggle("open"));
-    });
-
-    layout();
-    progress();
-    addEventListener("scroll", progress, { passive: true });
-    addEventListener("resize", () => { layout(); progress(); });
-    // Re-measure when content changes height after load (media, the viewer caption re-wrapping,
-    // fonts), or the freeze would sit where the step-through used to be.
-    new ResizeObserver(() => { layout(); progress(); }).observe(main);
-    wide.addEventListener("change", () => { layout(); progress(); });
-  }
 })();

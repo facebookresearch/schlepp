@@ -1,6 +1,7 @@
 /* Copyright (c) Meta Platforms, Inc. and affiliates. */
 :root {
   --cream: #f6efe1;
+  --page: rgb(250 247 242);   /* the page behind the white sheet, and the fill of clickable things */
   --ink: #2a1f1a;
   --muted: rgb(42 31 26 / 0.7);
   --faint: rgb(42 31 26 / 0.15);
@@ -9,6 +10,26 @@
   --copper: #b8602a;
   --content-width: 880px;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* Type scale for everything except the wordmark. */
+  --fs-xs: 0.75rem;     /* 12px: table heads, overlay labels, small print */
+  --fs-sm: 0.8125rem;   /* 13px: affiliations, figure notes, labels, code */
+  --fs-md: 0.875rem;    /* 14px: secondary text, tables, controls */
+  --fs-body: 1rem;      /* 16px */
+  --fs-h4: 1.125rem;    /* 18px */
+  --fs-h3: 1.5rem;      /* 24px */
+  --fs-h2: 1.75rem;     /* 28px */
+  /* Two radii: surfaces and media, and small things (controls, labels, thumbnails). */
+  --radius: 12px;
+  --radius-sm: 6px;
+  /* Spacing: each step is one kind of relation, used the same way everywhere. */
+  --space-1: 0.25rem;      /*  4px  lines in a tight group (authors, list items) */
+  --space-2: 0.5rem;       /*  8px  label or sub-heading to its content, tile gaps */
+  --space-3: 0.75rem;      /* 12px  media to its caption or note */
+  --space-4: 1rem;         /* 16px  heading to lead, controls to what they control, card insets */
+  --space-5: 1.5rem;       /* 24px  heading block (heading + lead) to its content */
+  --space-6: 2rem;         /* 32px  between blocks inside a section */
+  --space-section: 4.5rem; /* 72px  between sections */
+  --panel-pad: 2rem;       /* the panel's and the masthead bar's inset */
   --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);   /* iOS sheet/spring-like ease-out */
   --colour-fade: background-color 0.4s var(--ease-apple), color 0.4s var(--ease-apple),
                  border-color 0.4s var(--ease-apple);
@@ -23,11 +44,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* Paper: grain, soft mottling, and speckles laid over the cream. The tiles are balanced so
-     the page keeps the same overall colour before and after they load. */
-  background-color: var(--cream);
-  background-image: url("assets/paper/speckles.png"), url("assets/paper/grain.png"), url("assets/paper/mottle.png");
-  background-size: 600px, 96px, 640px;
+  background: var(--page);
   color: var(--ink);
   font: 1rem/1.6 system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
@@ -39,8 +56,8 @@ truchet-pattern svg { display: block; width: 100%; height: auto; }
 main {
   width: min(var(--content-width), 100% - 32px);
   margin: 0 auto;
-  /* 6rem on tall screens, shrinking with viewport height down to 1.25rem on short laptops. */
-  padding-top: clamp(1.25rem, (100vh - 640px) / 4, 6rem);
+  /* 3rem on tall screens, shrinking with viewport height down to 1.25rem on short laptops. */
+  padding-top: clamp(1.25rem, (100vh - 640px) / 6, 3rem);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -50,17 +67,24 @@ main {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 1rem 2rem;
-  margin-bottom: 1.5rem;
+  /* White like the panel it sits on: one sheet. No bottom padding, so the wordmark sits a
+     heading's distance (--space-5) above the teaser instead of two paddings. */
+  padding: var(--panel-pad) var(--panel-pad) 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: #fff;
 }
 
 h1 {
   font-family: "Passion One", sans-serif;
   font-weight: 400;
-  font-size: 4rem;
+  font-size: 3rem;
   line-height: 1;
-  margin: 0;
+  text-transform: uppercase;
+  /* Trim the line box to Passion One's capitals (measured: 0.15em above them, 0.21em of empty
+     descender space below), so the nav centres on the letters and the teaser gap starts at them. */
+  margin: -0.15em 0 -0.21em;
   color: var(--wine);
 }
 
@@ -71,7 +95,7 @@ nav a {
   align-items: center;
   gap: 0.4rem;
   padding: 0.45rem 0.9rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   color: var(--ink);
   font-weight: 500;
   text-decoration: none;
@@ -88,9 +112,7 @@ nav a.get[aria-disabled="true"]:hover { background: var(--faint); color: var(--m
 .panel {
   flex: 1;
   background: #fff;
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 0 24px rgb(90 50 20 / 0.06);
-  padding: 2rem;
+  padding: var(--space-5) var(--panel-pad) var(--space-section);   /* a section's gap before the footer */
 }
 
 section { scroll-margin-top: 1.5rem; }
@@ -102,7 +124,7 @@ section { scroll-margin-top: 1.5rem; }
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--cream);
 }
 
@@ -110,24 +132,24 @@ section { scroll-margin-top: 1.5rem; }
   display: grid;
   grid-template-columns: 1fr 34%;
   gap: 2rem;
-  margin-top: 2.5rem;
+  margin-top: var(--space-6);
 }
 
 h2 {
-  font-size: 1.75rem;
+  font-size: var(--fs-h2);
   line-height: 1.25;
   font-weight: 650;
   letter-spacing: -0.01em;
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-4);
   text-wrap: balance;
 }
 
-.authors { margin: 0 0 0.25rem; font-size: 0.85rem; font-weight: 500; line-height: 1.5; }
+.authors { margin: 0 0 var(--space-2); font-size: var(--fs-md); font-weight: 500; line-height: 1.5; }
 .authors a { text-decoration: none; color: inherit; transition: var(--colour-fade); }
-.authors a:hover { text-decoration: underline; color: var(--wine); }
+.authors a:hover { text-decoration: underline; }
 .authors span { white-space: nowrap; }
 .authors span:not(:last-child)::after { content: ","; }
-.affiliations { margin: 0 0 1.25rem; font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0 1.25rem; }
+.affiliations { margin: 0 0 var(--space-5); font-size: var(--fs-sm); color: var(--muted); display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
 sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
 .affiliations sup { margin: 0 0.2em 0 0; }
 
@@ -135,8 +157,8 @@ sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
 .stats {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.6rem;
-  margin: 2rem 0 0;
+  gap: var(--space-2);
+  margin: var(--space-6) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -145,8 +167,8 @@ sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 0.9rem 0.85rem 1rem;
-  border-radius: 12px;
+  padding: var(--space-4);
+  border-radius: var(--radius);
   background: color-mix(in srgb, var(--tone) 16%, #fff);
 }
 .stats li.copper { --tone: var(--copper); }
@@ -160,16 +182,16 @@ sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
   color: color-mix(in srgb, var(--tone), #000 25%);
 }
 .stats em {
-  font: 600 0.95rem/1 system-ui, -apple-system, sans-serif;
+  font: 600 var(--fs-body)/1 system-ui, -apple-system, sans-serif;
   font-style: normal;
 }
-.stats span { font-size: 0.8rem; line-height: 1.35; color: var(--ink); }
+.stats span { font-size: var(--fs-sm); line-height: 1.35; color: var(--ink); }
 
 .links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .links a {
   padding: 0.4rem 0.95rem;
   border: 1.5px solid var(--faint);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: none;
   color: var(--ink);
   font: inherit;
@@ -178,12 +200,12 @@ sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
   cursor: pointer;
   transition: var(--colour-fade);
 }
-.links a:hover { border-color: var(--wine); color: var(--wine); }
+.links a:hover { border-color: var(--ink); }
 /* Release status in place of the links: a plain label, deliberately not shaped like a button. */
 .links .soon {
   padding: 0.4rem 0.95rem;
-  border-radius: 999px;
-  background: var(--cream);
+  border-radius: var(--radius-sm);
+  background: var(--page);
   color: var(--muted);
   font-weight: 500;
 }
@@ -193,68 +215,62 @@ sup { font-size: 0.7em; line-height: 0; margin-left: 0.1em; }
 .deco truchet-pattern { position: absolute; }
 
 .deco-side {
-  margin: -1rem -2rem -1rem 0;   /* bleed off the panel's right edge */
+  margin: -1rem calc(-1 * var(--panel-pad)) -1rem 0;   /* bleed off the panel's right edge */
 }
 .deco-side truchet-pattern { left: 0; right: 0; top: 50%; translate: 0 -50%; }
 
 .deco-band {
-  margin: 4rem -2rem 0;
+  margin: var(--space-section) calc(-1 * var(--panel-pad)) 0;
 }
 .deco-band truchet-pattern { position: relative; }
 
 /* ─── content sections ─────────────────────────────────────────────── */
 
-.block { margin-top: 4.5rem; }
+.block { margin-top: var(--space-section); }
 
+/* Section headings: heavy wine capitals. */
 h3 {
-  font-size: 1.5rem;
-  line-height: 1.25;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  margin: 0 0 1rem;
+  font-size: var(--fs-h2);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.02em;   /* capitals need a little air */
+  text-transform: uppercase;
+  color: var(--wine);
+  margin: 0 0 var(--space-5);
   text-wrap: balance;
 }
+/* A lead sits closer to its heading (16px); the margins collapse to 24 - 8. */
+.block > h3 + .lead { margin-top: calc(var(--space-4) - var(--space-5)); }
 
-/* Section headings get a short copper bar underneath. */
-.block > h3::after {
-  content: "";
-  display: block;
-  width: 3rem;
-  height: 3px;
-  margin-top: 0.6rem;
-  border-radius: 3px;
-  background: var(--copper);
-}
+h4 { font-size: var(--fs-h4); margin: 0 0 var(--space-2); }
 
-h4 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+.lead { color: var(--muted); margin: 0 0 var(--space-5); max-width: 62ch; }
 
-.lead { color: var(--muted); margin: 0 0 1.5rem; max-width: 62ch; }
-
-code { font-family: var(--mono); font-size: 0.88em; }
+code { font-family: var(--mono); font-size: var(--fs-sm); }
 
 /* tables */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-md); }
 th, td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--faint); }
-thead th { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); vertical-align: bottom; }
+thead th { font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); vertical-align: bottom; }
 tbody th { font-weight: 600; white-space: nowrap; }
+.compare th, .compare td { padding-inline: 0.45rem; }   /* fits all 12 columns at the max content width */
 .compare td { white-space: nowrap; text-align: center; }
-.compare td.yes { color: var(--wine); font-weight: 600; }
 .compare td.no { color: rgb(42 31 26 / 0.3); }
-.compare tr.self { background: var(--cream); }
-.compare tr.self th, .compare tr.self td { font-weight: 700; }
+.compare tr.self { background: var(--page); }
 
 /* viewer */
 .viewer-controls {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.5rem 1rem;
+  gap: var(--space-2) var(--space-4);
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
-.control-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+.control-label { font-size: var(--fs-sm); font-weight: 600; color: var(--muted); }
 
-/* iOS-style segmented control: a cream track with a white thumb that slides to the active option. */
+/* iOS-style segmented control: a cream track with a white thumb that slides to the active option.
+   The track's radius is the thumb's plus the 3px inset, so the two curves stay concentric. */
 .segmented {
   position: relative;
   display: flex;
@@ -262,8 +278,8 @@ tbody th { font-weight: 600; white-space: nowrap; }
   width: max-content;
   max-width: 100%;
   padding: 3px;
-  border-radius: 999px;
-  background: var(--cream);
+  border-radius: calc(var(--radius-sm) + 3px);
+  background: var(--page);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -274,26 +290,25 @@ tbody th { font-weight: 600; white-space: nowrap; }
   flex: none;
   padding: 0.35rem 0.85rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--fs-md);
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
   transition: var(--colour-fade);
 }
 .segmented button:hover { color: var(--ink); }
-.segmented button.active { color: var(--wine); }
+.segmented button.active { color: #fff; }
 .seg-indicator {
   position: absolute;
   top: 3px;
   bottom: 3px;
   left: 0;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgb(90 50 20 / 0.15), 0 0 0 0.5px rgb(90 50 20 / 0.08);
+  border-radius: var(--radius-sm);
+  background: var(--ink);
   transition: transform 0.45s var(--ease-apple), width 0.45s var(--ease-apple);
 }
 /* Arrow buttons appear only when a track overflows (small screens), so the scroll is discoverable. */
@@ -303,25 +318,26 @@ tbody th { font-weight: 600; white-space: nowrap; }
   display: none;
   flex: none;
   place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
+  /* track = 3px inset + button (0.35rem padding twice + one 14px line at 1.6) + 3px inset */
+  width: calc(0.7rem + var(--fs-md) * 1.6 + 6px);
+  height: calc(0.7rem + var(--fs-md) * 1.6 + 6px);
   padding: 0;
   border: 0;
-  border-radius: 999px;
-  background: var(--cream);
+  border-radius: calc(var(--radius-sm) + 3px);
+  background: var(--page);
   color: var(--ink);
   cursor: pointer;
   transition: var(--colour-fade), opacity 0.3s var(--ease-apple);
 }
 .seg-arrow svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.seg-arrow:hover { color: var(--wine); }
+.seg-arrow:hover { background: color-mix(in srgb, var(--page), var(--ink) 6%); }
 .seg-arrow:disabled { opacity: 0.35; cursor: default; }
 .seg-wrap.overflowing .seg-arrow { display: grid; }
 .seg-divider { flex: none; width: 1px; height: 1.1rem; margin: 0 0.3rem; background: var(--faint); }
 
 .viewer-stage {
   position: relative;
-  border-radius: 8px;
+  border-radius: var(--radius);
   overflow: hidden;
   background: var(--ink);
 }
@@ -339,12 +355,12 @@ tbody th { font-weight: 600; white-space: nowrap; }
   left: 0.75rem;
   bottom: 0.75rem;
   padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: rgb(0 0 0 / 0.55);
   color: #fff;
-  font: 0.75rem var(--mono);
+  font: var(--fs-xs) var(--mono);
 }
-.viewer-caption { color: var(--muted); font-size: 0.9rem; margin: 0.75rem 0 0; }
+.viewer-caption { color: var(--muted); font-size: var(--fs-md); margin: var(--space-3) 0 0; }
 
 /* Overview: clickable tiles over the 3×3 mosaic clip (RGB spans the top-left 2×2). The grid is
    as wide as the letterboxed video: the stage is 16:9, so width = aspect × 9/16 of the stage. */
@@ -374,37 +390,38 @@ tbody th { font-weight: 600; white-space: nowrap; }
   left: 0.5rem;
   bottom: 0.5rem;
   padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: rgb(0 0 0 / 0.55);
   color: #fff;
-  font: 0.75rem var(--mono);
+  font: var(--fs-xs) var(--mono);
   transition: var(--colour-fade);
 }
 .viewer-tiles button:hover span,
 .viewer-tiles button:focus-visible span { background: var(--wine); }
 
-/* tasks: three themed rows (motion, geometry, bodies and objects), tinted like the stats */
-.task-themes { display: grid; grid-template-columns: 8.5rem 1fr 1fr; gap: 0.75rem; }
-.t-wine { --tone: var(--wine); }
-.t-gold { --tone: var(--gold); }
-.t-copper { --tone: var(--copper); }
+/* tasks: three themed rows (motion, geometry, bodies and objects), each task under a hairline */
+.task-themes { display: grid; grid-template-columns: 8.5rem 1fr 1fr; gap: var(--space-6); }
+.task, .task-theme { --tone: var(--wine); }
 .task-theme {
   grid-column: 1;
-  align-self: center;
-  font-size: 1rem;
+  padding-top: var(--space-5);
+  font-size: var(--fs-xs);
   font-weight: 600;
-  line-height: 1.2;
-  color: color-mix(in srgb, var(--tone), #000 25%);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 .task {
   display: grid;
   grid-template-columns: 3rem 1fr;
   column-gap: 0.9rem;
   align-content: start;
-  padding: 1rem 1.1rem;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--tone) 16%, #fff);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--faint);
 }
+/* The first row sits right under the heading, so it needs no rule above it. */
+.task-theme:first-child, .task:nth-of-type(-n + 2) { padding-top: 0; border-top: 0; }
 .task-icon { grid-row: span 3; width: 3rem; height: 3rem; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .task-icon .ac { stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.2; }
 .task-icon .dot { fill: var(--ink); stroke: none; }
@@ -413,200 +430,50 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .task-icon .fill { fill: color-mix(in srgb, var(--tone) 30%, #fff); stroke: var(--ink); }
 .task-icon .hidden { stroke-dasharray: 2 2.2; stroke-width: 1.2; opacity: 0.6; }
 .task-icon .layers { stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.6; }   /* depth: outlined stack */
-.task-icon .boxes { fill: color-mix(in srgb, var(--tone) 16%, #fff); stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.4; }   /* outlined; filled with the card colour so front boxes hide back edges */
+.task-icon .boxes { fill: #fff; stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 2.4; }   /* outlined; filled with the panel colour so front boxes hide back edges */
 .task-icon .figure { fill: color-mix(in srgb, var(--tone), #000 15%); stroke: none; }        /* person, arms open */
 .task-icon .figure .limbs { fill: none; stroke: color-mix(in srgb, var(--tone), #000 15%); stroke-width: 3.6; }
-.task h4 { margin: 0 0 0.15rem; }
-.task strong { font-size: 0.9rem; font-weight: 600; line-height: 1.35; color: color-mix(in srgb, var(--tone), #000 25%); }
-.task p { grid-column: 2; margin: 0.3rem 0 0; font-size: 0.85rem; line-height: 1.45; color: var(--muted); }
+.task h4 { font-size: var(--fs-body); margin: 0 0 var(--space-1); }
+.task strong { font-size: var(--fs-md); font-weight: 500; line-height: 1.45; }
+.task p { grid-column: 2; margin: var(--space-1) 0 0; font-size: var(--fs-md); line-height: 1.5; color: var(--muted); }
 
 /* method */
 .method-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: var(--space-6);
   align-items: center;
-  margin-top: 2rem;
+  margin-top: var(--space-6);
 }
 .method-row p { margin: 0; color: var(--muted); }
-.method-row img { display: block; width: 100%; border-radius: 8px; }
-.funnel-card { padding: 1.25rem 1.25rem 1.1rem; border-radius: 10px; background: var(--cream); }
+.method-row img { display: block; width: 100%; border-radius: var(--radius); }
+.funnel-card { padding: var(--space-4); border-radius: var(--radius); background: var(--cream); }
 .funnel { display: block; width: 100%; height: auto; overflow: visible; }
 .funnel-label { font-size: 13px; font-weight: 600; fill: var(--ink); }
 .funnel-detail { font-size: 11px; fill: var(--muted); }
 .funnel-count { font-family: "Passion One", sans-serif; font-size: 22px; fill: var(--wine); dominant-baseline: central; }
-.actor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
-.actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
+.actor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+.actor-grid img { aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-sm); }
 
-/* method: a pinned step-through on wide screens, stacked steps behind a fold on phones.
-   Wide: once the step-through is centred the whole page freezes in place while scrolling
-   advances the steps; caption and figure crossfade, and the stage dots fill as you go.
-   Phones: steps stack, figure above caption; the first shows, the rest wait behind a button. */
-.sc-toggle {
-  display: flex;
-  width: 100%;
-  border: 0;
-  font: inherit;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1rem;
-  border-radius: 12px;
-  background: var(--wine);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  list-style: none;
-  transition: var(--colour-fade);
-}
-.sc-toggle:hover { background: #651823; }
-.sc-toggle[hidden] { display: none; }
-.sc-toggle svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s var(--ease-apple); }
-.sc-fold.open .sc-toggle svg { transform: rotate(180deg); }
-.sc-toggle-close, .sc-fold.open .sc-toggle-open { display: none; }
-.sc-fold.open .sc-toggle-close { display: inline; }
-@media (max-width: 720px) {
-  .sc-fold.folded:not(.open) .sc-step:nth-child(n + 2) { display: none; }
-}
-.sc-step { margin-bottom: 2.5rem; }
-.sc-step h4 { margin: 1rem 0 0.35rem; }
-.sc-step p { margin: 0; color: var(--muted); max-width: 60ch; }
-.sc-stage-label { margin: 0 0 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--wine); }
-.sc-dots, .sc-figure { display: none; }
-@media (min-width: 721px) {
-  .sc-toggle { display: none; }
-  main { position: sticky; }   /* the whole page freezes while stepping; top and spacer set by main.js */
-  .sc-pin {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr);
-    column-gap: 2.5rem;
-  }
-  .sc-text { display: flex; flex-direction: column; }
-  .sc-steps { display: grid; }
-  .sc-step {
-    grid-area: 1 / 1;
-    margin: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s var(--ease-apple), visibility 0s linear 0.3s;
-  }
-  .sc-step.active { opacity: 1; visibility: visible; transition-delay: 0s; }
-  .sc-step > .mc-panels, .sc-stage-label { display: none; }
-  .sc-step h4 { margin-top: 0; }
-  .sc-figure { display: block; }
-  .sc-stage { display: grid; }
-  .sc-fig {
-    grid-area: 1 / 1;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s var(--ease-apple), visibility 0s linear 0.3s;
-  }
-  .sc-fig.active { opacity: 1; visibility: visible; transition-delay: 0s; }
-  /* stage dots: one group per stage, at the bottom of the caption column */
-  .sc-dots { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-top: auto; padding-top: 1.25rem; }
-  .sc-dot-group { display: flex; flex-direction: column; gap: 0.35rem; }
-  .sc-dot-label { font-size: 0.75rem; font-weight: 500; color: var(--muted); white-space: nowrap; transition: var(--colour-fade); }
-  .sc-dot-group.active .sc-dot-label { color: var(--wine); }
-  .sc-dot-row { display: flex; align-items: center; gap: 0.45rem; height: 0.7rem; }
-  .sc-dot {
-    position: relative;
-    width: 0.7rem;
-    height: 0.7rem;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    background: var(--faint);
-    cursor: pointer;
-    transition: background-color 0.3s var(--ease-apple), width 0.3s var(--ease-apple);
-  }
-  .sc-dot.done { background: color-mix(in srgb, var(--wine) 35%, #fff); }
-  .sc-dot.active { width: 2.2rem; background: var(--wine); }
-  /* progress through the current step: a translucent pill filling the active dot (--p from main.js) */
-  .sc-dot::after {
-    content: "";
-    position: absolute;
-    inset: 2px auto 2px 2px;
-    min-width: calc(0.7rem - 4px);
-    width: calc((100% - 4px) * var(--p, 0));
-    border-radius: inherit;
-    background: rgb(255 255 255 / 0.45);
-    opacity: 0;
-    transition: opacity 0.3s var(--ease-apple);
-  }
-  .sc-dot.active::after { opacity: 1; }
-}
-.mc-panels {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  height: 340px;
-  padding: 1.25rem;
-  border-radius: 10px;
-  background: var(--cream);
-}
-.mc-panels img { display: block; min-width: 0; max-height: 100%; }
-.mc-single img { height: 100%; width: auto; max-width: 100%; }
-.mc-pair img { flex: 1 1 0; width: 0; max-width: 44%; }
-/* Filmstrips: no gaps, little side padding. The conditioning frames (first and last) were
-   already shown on the step before, so they shrink and the generated frames overlap them. */
-.mc-panels.mc-strip { gap: 0; padding-inline: 0.5rem; }
-/* Each frame is rendered at its zoomed size and scaled down at rest, so it is already sharp
-   when it grows on hover (scaling up a small render looks soft until the browser re-renders). */
-.mc-f { position: relative; z-index: 1; flex: 1 1 0; min-width: 0; aspect-ratio: 202.987 / 116.19; }
-.mc-f img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 160%;
-  max-height: none;
-  transform: translate(-50%, -50%) scale(0.625);
-  transition: transform 0.55s var(--ease-apple), filter 0.55s var(--ease-apple);
-}
-.mc-f:first-child img { left: 0; transform-origin: left center; transform: translateY(-50%) scale(0.625); }
-.mc-f:last-child img { left: auto; right: 0; transform-origin: right center; transform: translateY(-50%) scale(0.625); }
-.mc-f.mc-key { flex-grow: 1.35; }
-.mc-f.mc-cond { flex-grow: 0.72; z-index: 0; }
-.mc-f.mc-cond:first-child { margin-right: -2.5%; }
-.mc-f.mc-cond:last-child { margin-left: -2.5%; }
-.mc-f.mc-dim img { filter: contrast(0.45) brightness(1.3); }   /* faded but opaque, so overlaps stay clean */
-@media (hover: hover) {
-  .mc-f:hover { z-index: 3; }
-  .mc-f:hover img { transform: translate(-50%, -50%) scale(1); filter: none; }
-  .mc-f:first-child:hover img, .mc-f:last-child:hover img { transform: translateY(-50%) scale(1); }
-}
-.mc-arrow { flex: none; width: 1.4rem; height: 1.4rem; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.sym-hat { position: relative; display: inline-block; }
-.sym-hat::before { content: "^"; position: absolute; left: 50%; top: -0.4em; transform: translateX(-50%); font-weight: 400; }
-.sym-star { font-size: 1em; line-height: 0; }
-@media (max-width: 720px) {
-  .mc-panels { height: 230px; padding: 0.9rem; flex-wrap: wrap; align-content: center; }
-  .mc-panels.mc-strip { gap: 0.4rem; }
-  .mc-f { flex: 0 0 calc(50% - 0.2rem); }
-  .mc-f.mc-key { flex-grow: 0; }
-  .mc-f.mc-cond { flex-grow: 0; margin: 0 !important; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sc-step, .sc-fig, .sc-dot, .sc-dot::after { transition: none; }
-}
+.method-video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); background: var(--cream); }
 
 /* cameras */
-.details-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start; }
-.facts { margin: 0 0 1.5rem; padding-left: 1.1rem; color: var(--muted); font-size: 0.9rem; }
-.facts li { margin-bottom: 0.3rem; }
+.details-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-6); align-items: start; }
+.facts { margin: 0 0 var(--space-6); padding-left: 1.1rem; color: var(--muted); font-size: var(--fs-md); }
+.facts li { margin-bottom: var(--space-1); }
 
 /* get */
-.code-card { margin-top: 1.5rem; }
+.code-card + .code-card { margin-top: var(--space-6); }
 
 /* Multi-select checklist: three groups side by side, a tick box per option. */
 .picker {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem 1.5rem;
-  margin-bottom: 1rem;
-  padding: 1rem 1.2rem;
+  gap: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
   border: 1px solid var(--faint);
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 .picker fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
 .picker legend {
@@ -614,31 +481,21 @@ tbody th { font-weight: 600; white-space: nowrap; }
   align-items: baseline;
   gap: 0.5rem;
   padding: 0;
-  margin-bottom: 0.4rem;
-  font-size: 0.8rem;
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--muted);
 }
-.toggle-all {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--copper);
-  font: inherit;
-  font-weight: 500;
-  cursor: pointer;
-}
-.toggle-all:hover { color: var(--wine); }
+.picker legend .check { padding: 0; font: inherit; }   /* the group's own checkbox */
 .check {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.2rem 0;
-  font-size: 0.9rem;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  font-size: var(--fs-md);
   cursor: pointer;
 }
-.check code { font-size: 0.82rem; }
-.check small { color: var(--muted); font-size: 0.75rem; }
+.check small { color: var(--muted); font-size: var(--fs-xs); }
 .check.locked { color: var(--muted); cursor: default; }
 .check input {
   appearance: none;
@@ -649,7 +506,7 @@ tbody th { font-weight: 600; white-space: nowrap; }
   height: 1.1rem;
   margin: 0;
   border: 1.5px solid rgb(42 31 26 / 0.3);
-  border-radius: 5px;
+  border-radius: calc(var(--radius-sm) - 2px);   /* 4px reads as the same corner on a 17px box */
   background: #fff;
   cursor: inherit;
   transition: var(--colour-fade);
@@ -664,9 +521,11 @@ tbody th { font-weight: 600; white-space: nowrap; }
   transform: rotate(-45deg) scale(0);
   transition: transform 0.3s var(--ease-apple);
 }
-.check input:checked { background: var(--wine); border-color: var(--wine); }
+.check input:checked, .check input:indeterminate { background: var(--wine); border-color: var(--wine); }
 .check input:checked::after { transform: rotate(-45deg) scale(1); }
-.check:hover input:not(:disabled) { border-color: var(--wine); }
+/* Partly selected group: a dash instead of the tick. */
+.check input:indeterminate::after { height: 0; margin-top: 0; border-width: 0 0 2px; transform: scale(1); }
+.check:hover input:not(:disabled):not(:checked):not(:indeterminate) { border-color: var(--ink); }
 .check input:disabled { background: rgb(42 31 26 / 0.3); border-color: transparent; }
 .check input:focus-visible { outline: 2px solid var(--wine); outline-offset: 2px; }
 
@@ -680,32 +539,32 @@ tbody th { font-weight: 600; white-space: nowrap; }
   gap: 0.3rem;
   padding: 0.25rem 0.6rem;
   border: 1px solid var(--faint);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: rgb(255 255 255 / 0.85);
   color: var(--muted);
   font: inherit;
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   font-weight: 500;
   cursor: pointer;
   transition: var(--colour-fade);
 }
-.copy:hover { color: var(--wine); border-color: var(--wine); }
+.copy:hover { color: var(--ink); border-color: var(--ink); }
 .copy.done { background: var(--wine); border-color: var(--wine); color: #fff; }
 .copy svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.code-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 1rem; margin-bottom: 0.5rem; }
-.code-head span { font-size: 0.85rem; color: var(--muted); }
+.code-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 var(--space-4); margin-bottom: var(--space-2); }
+.code-head span { font-size: var(--fs-md); color: var(--muted); }
 .code-head a { color: inherit; text-decoration: underline; text-decoration-color: var(--faint); text-underline-offset: 2px; transition: var(--colour-fade); }
-.code-head a:hover { color: var(--wine); text-decoration-color: currentColor; }
+.code-head a:hover { color: var(--ink); text-decoration-color: currentColor; }
 pre {
-  margin: 0 0 0.75rem;
-  padding: 1rem 1.2rem;
-  border-radius: 10px;
-  background: var(--cream);
+  margin: 0 0 var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--page);
   overflow-x: auto;
-  font: 0.8rem/1.6 var(--mono);
+  font: var(--fs-sm)/1.6 var(--mono);
 }
 pre code { font-size: inherit; }
-.code-card p { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.5rem; }
+.code-card p { color: var(--muted); font-size: var(--fs-md); margin: 0 0 var(--space-2); }
 .tok-kw { color: var(--wine); }
 .tok-fn { color: var(--copper); }
 .tok-str { color: #8a6412; }
@@ -713,42 +572,67 @@ pre code { font-size: inherit; }
 .tok-cls { color: #6b3a1f; font-weight: 600; }
 .tok-com { color: rgb(42 31 26 / 0.45); }
 
+/* The dark end of the sheet: as wide as the panel, with the panel's inset. */
 footer {
+  width: min(var(--content-width), 100% - 32px);
+  margin: 0 auto;
+  background: var(--ink);
+  color: rgb(250 247 242 / 0.65);
+  font-size: var(--fs-md);
+}
+.footer-inner {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
-  margin-top: 4.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--faint);
-  font-size: 0.85rem;
-  color: var(--muted);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-section) var(--panel-pad) var(--space-6);
 }
-footer a { color: inherit; text-decoration: none; transition: var(--colour-fade); }
-footer a:hover { color: var(--wine); }
+.footer-mark {
+  font: 2rem/1 "Passion One", sans-serif;
+  text-transform: uppercase;
+  color: var(--page);
+}
+.footer-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+.footer-links a { color: inherit; text-decoration: none; transition: var(--colour-fade); }
+.footer-links a:hover { color: var(--page); }
+footer small {
+  flex-basis: 100%;
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgb(250 247 242 / 0.12);
+  font-size: var(--fs-sm);
+  color: rgb(250 247 242 / 0.45);
+}
 
 @media (max-width: 720px) {
+  /* Under the wordmark the nav reads as text, so its first word lines up with the wordmark. */
+  .masthead nav { width: 100%; gap: var(--space-5); }
+  nav a:not(.get) { padding: 0; border-radius: 0; text-underline-offset: 0.3em; }
+  nav a:not(.get):hover { background: none; text-decoration: underline; }
+  nav a.get { margin-left: auto; }   /* the button keeps to the right edge, as on desktop */
   .hero, .method-row, .details-grid { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .picker { grid-template-columns: 1fr 1fr; }
   .task-themes { grid-template-columns: 1fr 1fr; }
-  .task-theme { grid-column: 1 / -1; margin-top: 0.5rem; }
+  .task-theme { grid-column: 1 / -1; padding-top: 0; margin-bottom: -1rem; }
   .deco-side { display: none; }
 }
 
 @media (max-width: 480px) {
   /* The white panel spans the full screen width; the header keeps the 16px inset on its own. */
+  :root { --panel-pad: 1rem; }
   main { width: 100%; padding-top: 1rem; }
-  .masthead { padding-inline: 16px; }
+  footer { width: 100%; }
   .viewer-controls { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
   .control-label:not(:first-child) { margin-top: 0.4rem; }
   .viewer-tiles span { left: 0.25rem; bottom: 0.25rem; padding: 0.05rem 0.35rem; font-size: 0.6rem; }
-  nav { flex-wrap: nowrap; gap: 0; margin-left: -0.6rem; }
-  nav a { padding: 0.45rem 0.6rem; font-size: 0.95rem; }
-  nav a.get { margin-left: 0.25rem; }
-  .panel { padding: 1rem; }
-  .deco-band { margin-inline: -1rem; }
-  h2 { font-size: 1.4rem; }
+  nav { flex-wrap: nowrap; gap: var(--space-4); }
+  nav a { font-size: var(--fs-md); }
+  nav a.get { padding: 0.45rem 0.6rem; }
+  h2 { font-size: var(--fs-h3); }
   .task-themes { grid-template-columns: 1fr; }
+  .task:nth-of-type(2) { padding-top: var(--space-5); border-top: 1px solid var(--faint); }   /* one column: only the first task is first */
   .picker { grid-template-columns: 1fr; }
   .stats { grid-template-columns: 1fr 1fr; }
   .stats li:last-child { grid-column: span 2; }
