@@ -665,7 +665,10 @@ footer small {
 @media (max-width: 480px) {
   /* The white panel spans the full screen width; the header keeps the 16px inset on its own. */
   :root { --panel-pad: 1rem; }
-  main { width: 100%; padding-top: 1rem; }
+  /* On phones the sheet is the whole screen: no page colour at the sides or above it. */
+  body { background: var(--sheet); }
+  main { width: 100%; padding-top: 0; }
+  .masthead { padding-top: var(--space-5); }   /* big capitals need more room from the screen edge than 16px */
   footer { width: 100%; }
   .viewer-controls { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
   .control-label:not(:first-child) { margin-top: 0.4rem; }
